@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("admin.backup.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/list.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $listForm = $("#listForm");
+	var $type = $("#type");
+	var $typeSelect = $("#typeSelect");
+	var $typeOption = $("#typeOption a");
+	
+	var $backup = $("#backupButton");
+	var $restore = $("#listTable a[name='restoreButton']");
+	var $clear = $("#clearButton");
+	
+	[@flash_message /]
+	
+	$typeSelect.mouseover(function() {
+		var $this = $(this);
+		var offset = $this.offset();
+		var $menuWrap = $this.closest("div.menuWrap");
+		var $popupMenu = $menuWrap.children("div.popupMenu");
+		$popupMenu.css({left: offset.left, top: offset.top + $this.height() + 2}).show();
+		$menuWrap.mouseleave(function() {
+			$popupMenu.hide();
+		});
+	});
+	
+	$typeOption.click(function() {
+		var $this = $(this);
+		$type.val($this.attr("val"));
+		$listForm.submit();
+		return false;
+	});
+	
+	
+	// 备份
+	$backup.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "确定备份?备份过程中，请勿刷新页面，以免备份失败！",
+			onOk: function() {
+				$.ajax({
+					url: "backup.jhtml",
+					type: "POST",
+					dataType: "json",
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							setTimeout(function() {
+								location.reload(true);
+							}, 3000);
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+
+	// 还原
+	$restore.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "确定还原？还原过程中，请勿刷新页面，以免还原失败！",
+			onOk: function() {
+				$.ajax({
+					url: "restore.jhtml",
+					type: "POST",
+					dataType: "json",
+					data:{"fileName":$this.attr("val")},
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							setTimeout(function() {
+								location.reload(true);
+							}, 3000);
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+	
+	// 清除数据
+	$clear.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "本操作将会清除系统所有数据，请谨慎操作！",
+			onOk: function() {
+				$.ajax({
+					url: "clear.jhtml",
+					type: "POST",
+					dataType: "json",
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							setTimeout(function() {
+								location.reload(true);
+							}, 3000);
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+});
+</script>
+</head>
+<body>
+	<div class="path">
+		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.backup.list")} <span>(${message("admin.page.total", map.size())})</span>
+	</div>
+	<form id="listForm" action="list.jhtml" method="get">
+		<input type="hidden" id="type" name="type" value="${type}" />
+		<div class="bar">
+			<div class="buttonWrap">
+				<a href="javascript:;" id="refreshButton" class="iconButton">
+					<span class="refreshIcon">&nbsp;</span>${message("admin.common.refresh")}
+				</a>
+				<a href="javascript:;" id="backupButton" class="iconButton">
+					备份
+				</a>
+				<a href="javascript:;" id="clearButton" class="iconButton">
+					清除数据
+				</a>
+			</div>
+		</div>
+		<table id="listTable" class="list">
+			<tr>
+				<th>
+					<span>${message("Template.name")}</span>
+				</th>
+				<th>
+					<span>${message("Template.templatePath")}</span>
+				</th>
+				<th>
+					<span>${message("admin.common.handle")}</span>
+				</th>
+			</tr>
+			[#list map.keySet() as key]
+				<tr>
+					<td>
+						${key}
+					</td>
+					<td>
+						${map.get(key)}
+					</td>
+					<td>
+						<a href="javascript:;" name="restoreButton" class="iconButton" val="${key}">还原</a>
+					</td>
+				</tr>
+			[/#list]
+		</table>
+	</form>
+</body>
+</html>

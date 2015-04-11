@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("admin.index.title")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.input .powered {
+	font-size: 11px;
+	text-align: right;
+	color: #cccccc;
+}
+</style>
+</head>
+<body>
+	<div class="path">
+		${message("admin.index.title")}
+	</div>
+	<table class="input">
+		<tr>
+			<td colspan="10">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<th>
+				平台总会员:
+			</th>
+			<td>
+				${memberCount}
+			</td>
+			<th>
+				平台激活会员:
+			</th>
+			<td>
+				${memberCount2}
+			</td>
+			<th>
+				平台未激活会员:
+			</th>
+			<td>
+				${memberCount1}
+			</td>
+		</tr>
+		<tr>
+			<th>
+				今日新增会员:
+			</th>
+			<td>
+				${memberCount3}
+			</td>
+			<th>
+				今日激活会员:
+			</th>
+			<td>
+				${memberCount5}
+			</td>
+			<th>
+				今日未激活会员:
+			</th>
+			<td>
+				${memberCount4}
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="10">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<th>
+				会员总资产:
+			</th>
+			<td>
+				${currency(memberBalance,true,true)}
+			</td>
+			<th>
+				会员现金币:
+			</th>
+			<td>
+				${currency(memberBalance0,true,true)}
+			</td>
+			<th>
+				会员报单币:
+			</th>
+			<td>
+				${currency(memberBalance1,true,true)}
+			</td>
+		</tr>
+		<tr>
+			<th>
+				会员复投币:
+			</th>
+			<td>
+				${currency(memberBalance2,true,true)}
+			</td>
+			<th>
+				会员理财币:
+			</th>
+			<td>
+				${currency(memberBalance3,true,true)}
+			</td>
+			<th>
+				&nbsp;
+			</th>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="10">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<th>
+				平台总资产:
+			</th>
+			<td>
+				${currency(balance,true,true)}
+			</td>
+			<th>
+				平台总分红:
+			</th>
+			<td>
+				${currency(balance1,true,true)}
+			</td>
+			<th>
+				今日新增资金:
+			</th>
+			<td>
+				${currency(balance2,true,true)}
+			</td>
+		</tr>
+		<tr>
+			<th>
+				今日已分红:
+			</th>
+			<td>
+				${currency(balance3,true,true)}
+			</td>
+			<th>
+				今日提现金额:
+			</th>
+			<td>
+				${currency(balance4,true,true)}
+			</td>
+			<th>
+				今日处理提现:
+			</th>
+			<td>
+				${currency(balance5,true,true)}
+			</td>
+		</tr>
+		<tr>
+			<td colspan="10">
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

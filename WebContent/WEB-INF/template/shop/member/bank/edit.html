@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.bank.edit")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $inputForm = $("#inputForm");
+	var $areaId = $("#areaId");
+	
+	[@flash_message /]
+	
+	// 地区选择
+	$areaId.lSelect({
+		url: "${base}/common/area.jhtml"
+	});
+	
+	// 表单验证
+	$inputForm.validate({
+		rules: {
+			bankTypeId: "required",
+			bankAccount: "required",
+			bankTrueName: "required",
+			areaId:"required",
+			address:"required",
+		}
+	});
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "receiverList" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="input">
+				<div class="title">${message("shop.member.bank.add")}</div>
+				<form id="inputForm" action="update.jhtml" method="post">
+					<input type="hidden" name="id" value="${bank.id}" />
+					<table class="input">
+						<tr>
+							<th>
+								${message("Bank.bankType")}: 
+							</th>
+							<td>
+								<select name="bankTypeId" id="bankTypeId" class="text">
+									<option value="">--选择卡种--</option>
+									[#list bankTypes as bankType]
+									<option value="${bankType.id}" [#if bank.bankType==bankType] selected="selected" [/#if]>${bankType.fullName}</option>
+									[/#list]
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("Bank.bankAccount")}: 
+							</th>
+							<td>
+								<span class="fieldSet">
+									<input type="text" id="bankAccount" class="text" name="bankAccount" value="${bank.bankAccount}"/>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("Bank.bankTrueName")}: 
+							</th>
+							<td>
+								<input type="text" name="bankTrueName" class="text" maxlength="200" value="${bank.bankTrueName}"/>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("Bank.areaId")}: 
+							</th>
+							<td>
+								<span class="fieldSet">
+									<input type="hidden" id="areaId" name="areaId" treePath="${(bank.area.treePath)!}" value="${(bank.area.id)!}"/>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("Bank.address")}: 
+							</th>
+							<td>
+								<input type="text" name="address" class="text" maxlength="200" value="${bank.address}"/>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("Bank.isDefault")}:
+							</th>
+							<td>
+								<input type="checkbox" name="isDefault" [#if bank.isDefault]checked="checked"[/#if] value="true" />
+								<input type="hidden" name="_isDefault" value="false" />
+							</td>
+						</tr>
+						<tr>
+							<th>
+								&nbsp;
+							</th>
+							<td>
+								<input type="submit" class="button" value="${message("shop.member.submit")}" />
+								<input type="button" class="button" value="${message("shop.member.back")}" onclick="location.href='list.jhtml'" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

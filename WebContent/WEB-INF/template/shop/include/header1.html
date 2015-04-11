@@ -1,0 +1,134 @@
+<link href="${base}/resources/game/file/main2.css" type="text/css" rel="stylesheet"/>
+<link href="${base}/resources/game/file/V5-UI.css" type="text/css" rel="stylesheet"/>
+  <link type="text/css" href="${base}/resources/game/file/base.css" rel="stylesheet">
+    <link type="text/css" href="${base}/resources/game/file/Index.css" rel="stylesheet"/>
+    <link type="text/css" href="${base}/resources/game/file/lrtk.css" rel="stylesheet"/>   
+  <script type="text/javascript" src="${base}/resources/game/file/Index.js"></script>
+  
+  [#if member!=null]
+<div id="head">
+        <div class="contentMain">
+            <div class="contenter">
+                <div id="logo">
+                    <img src="${setting.logo}" alt="${setting.siteName}" />
+                </div>
+                <div role="navigation">
+                    <ul class="navgion">
+                        <li class="navLi">
+                            <div class="icon icon-home">
+                            </div>
+                            <a class="navtext" href="${base}/member/index.jhtml">首页</a> </li>
+                        
+                        <li class="navLi">
+                            <div class="icon icon-vip">
+                            </div>
+                            <a class="navtext">${message("shop.member.navigation.profile")}</a>
+                            <ul class="ermenu" style="display: none;">
+                                <li>
+									<a href="${base}/member/profile/edit.jhtml" >${message("shop.member.profile.edit")}</a>
+								</li>
+								<li>
+									<a href="${base}/member/password/edit.jhtml" >${message("shop.member.password.edit")}</a>
+								</li>
+								<li>
+									<a href="${base}/member/password/edit2.jhtml" >修改二级密码</a>
+								</li>
+                            </ul>
+                        </li>
+                        
+                        <li class="navLi">
+                            <div class="icon icon-pay">
+                            </div>
+                            <a class="navtext">财务管理</a>
+                            <ul class="ermenu" style="display: none;">
+								<li>
+									<a href="${base}/member/deposit/list.jhtml">${message("shop.member.deposit.list")}</a>
+								</li>
+								<li>
+									<a href="${base}/member/bank/list.jhtml">银行卡列表</a>
+								</li>
+								<li>
+									<a href="${base}/member/bonuds/list.jhtml">奖金明细</a>
+								</li>
+								<li>
+									<a href="${base}/member/statices.jhtml">收益报表</a>
+								</li>
+								<li>
+									<a href="${base}/member/withdraw/add.jhtml">我要提现</a>
+								</li>
+								<li>
+									<a href="${base}/member/transfer/add.jhtml">内部转账</a>
+								</li>
+								<li>
+									<a href="${base}/member/transfer/add1.jhtml">货币转换</a>
+								</li>
+                            </ul>
+                        </li>
+                        
+                        <li class="navLi">
+                            <div class="icon icon-server">
+                            </div>
+                            <a class="navtext">操作记录</a>
+                            <ul class="ermenu">
+                                <li>
+									<a href="${base}/member/transfer/list.jhtml">转账记录</a>
+								</li>
+								<li>
+									<a href="${base}/member/transfer/list1.jhtml">货币转换记录</a>
+								</li>
+								<li>
+									<a href="${base}/member/withdraw/list.jhtml">提现记录</a>
+								</li>
+                            </ul>
+                        </li>
+                        
+                        <li class="navLi">
+                            <div class="icon icon-server">
+                            </div>
+                            <a class="navtext">团队管理</a>
+                            <ul class="ermenu">
+                                
+                               <li>
+									<a href="${base}/member/myPeople.jhtml">我的会员</a>
+								</li>
+								<li>
+									<a href="${base}/member/groupStructure.jhtml">结构图</a>
+								</li>
+								<li>
+                                <a href="${base}/member/register.jhtml">会员注册</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        
+                        <li class="navLi">
+                            <div class="icon icon-news">
+                            </div>
+                            <a class="navtext">留言管理</a>
+                            <ul class="ermenu">
+                            	<li>
+									<a href="${base}/member/message/send.jhtml">${message("shop.member.message.send")}</a>
+								</li>
+								<li>
+									<a href="${base}/member/message/list.jhtml">${message("shop.member.message.list")}</a>
+								</li>
+								<li>
+									<a href="${base}/member/message/draft.jhtml">${message("shop.member.message.draft")}</a>
+								</li>
+                            </ul>
+                        </li>
+                        
+                        <li class="navLi">
+                            <div class="icon icon-exit">
+                            </div>
+                            <a class="navtext" href="${base}/logout.jhtml">安全退出</a> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="height: 100px;">
+    </div>
+    [/#if]
+    

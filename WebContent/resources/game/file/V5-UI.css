@@ -1,0 +1,26 @@
+#v5_show{ padding: 10px; background: #fff; _width: 10px; _height: 10px;  position: fixed; left: 50%; top: 50%; border:1px solid #f0f0f0; box-shadow: 0px 0px 10px #555; z-index: 99999; border-radius: 3px; behavior: url(BaseFlies/pie.htc);  display: none;}
+#v5_show .close{ width: 24px; height: 24px; background: url(../images/close.gif); cursor: pointer; position: absolute; right: 10px; top: 10px;}
+#v5_show .title{ width: 100%; height: 24px; line-height: 24px; border-bottom:1px solid #e5e5e5;  font-size: 16px; padding-bottom: 5px; margin-bottom: 5px; clear: both; font-family: "microsoft yahei","黑体"; color: #135aa4}
+#shade{ width: 100%; height: 150%; display: none;  position: fixed; left: 0; top: 0; z-index: 99998; background: #000; filter:alpha(opacity=50);  opacity: 0.5}
+
+#v5_prompt{ padding: 10px; background: #f5f5f5;  position: fixed; left: 50%; top: 50%; border:1px solid #f0f0f0; box-shadow: 0px 0px 10px #555; z-index: 99999; border-radius: 3px; behavior: url(BaseFlies/pie.htc); *behavior: ;  display: none; font-weight: bold;}
+#v5_prompt .alert_ico{ width: 24px; height: 24px; float: left; background: url(../images/V5.UI_alert.gif)}
+#v5_prompt .error_ico{ width: 24px; height: 24px; float: left; background: url(../images/V5.UI_error.gif)}
+#v5_prompt .success_ico{ width: 24px; height: 24px; float: left; background: url(../images/V5.UI_success.gif)}
+#v5_prompt .confirm_ico{ width: 24px; height: 24px; float: left; background: url(../images/V5.UI_confirm.gif)}
+#v5_prompt .prompt_ico{ width: 24px; height: 24px; float: left; background: url(../images/V5.UI_prompt.gif)}
+#v5_prompt .content{ height: 24px; line-height: 24px; padding: 0 0 0 7px; float:left;}
+
+#v5_prompt .yesno_btn{ clear: both; width:100%; padding:10px 5px;}
+#v5_prompt .yesno_btn .btnok{display: block; float: left; margin-right: 15px; font-size: 14px;  height: 32px; line-height: 30px; padding: 0 15px; border: 1px solid #a63000; background: url(../images/col_bg2.gif) 0 0 repeat-x; border-radius: 3px; color: #fff; font-weight: bold; cursor: pointer; behavior: url(BaseFlies/pie.htc); *behavior: ; position: relative;}
+#v5_prompt .yesno_btn .btnok:hover{background: url(../images/col_bg2.gif) 0 -32px repeat-x;}
+#v5_prompt .yesno_btn .btn{display: block; float: right; font-size: 14px;  height: 32px; line-height: 30px; padding: 0 15px; border: 1px solid #bababa; background: url(../images/col_bg.gif) 0 0 repeat-x; border-radius: 3px; color: #333; font-weight: bold; cursor: pointer; behavior: url(BaseFlies/pie.htc); *behavior: ; position: relative;}
+#v5_prompt .yesno_btn .btn:hover{background: url(../images/col_bg.gif) 0 -32px repeat-x;}
+
+#v5_prompt .callinput{ height: 22px; line-height: 22px; margin:10px auto 0 auto; *margin:10px 0 0 150px; display: block; clear: both; }
+#v5_prompt .prompt_btn{ clear: both; width:100%; padding:10px 5px;}
+#v5_prompt .prompt_btn .btnok{display: block; float: left; margin-right: 15px; font-size: 14px;  height: 32px; line-height: 30px; padding: 0 15px; border: 1px solid #135aa4; background: url(../images/col_bg.gif) 0 -64px repeat-x; border-radius: 3px; color: #fff; font-weight: bold; cursor: pointer; behavior: url(BaseFlies/pie.htc); *behavior: ; position: relative;}
+#v5_prompt .prompt_btn .btnok:hover{background: url(../images/col_bg.gif) 0 -96px repeat-x;}
+#v5_prompt .prompt_btn .btn{display: block; float: right; font-size: 14px;  height: 32px; line-height: 30px; padding: 0 15px; border: 1px solid #bababa; background: url(../images/col_bg.gif) 0 0 repeat-x; border-radius: 3px; color: #333; font-weight: bold; cursor: pointer; behavior: url(BaseFlies/pie.htc); *behavior: ; position: relative;}
+#v5_prompt .prompt_btn .btn:hover{background: url(../images/col_bg.gif) 0 -32px repeat-x;}
+.cleardiv{ width: 100%; height: 20px; clear: both;}

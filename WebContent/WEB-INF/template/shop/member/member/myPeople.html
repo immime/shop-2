@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.children.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/list.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $delete = $("table.list a.delete");
+	
+	[@flash_message /]
+
+	// 删除
+	$delete.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "${message("admin.dialog.deleteConfirm")}",
+			onOk: function() {
+				$.ajax({
+					url: "delete.jhtml",
+					type: "POST",
+					data: {id: $this.attr("val")},
+					dataType: "json",
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							$this.closest("tr").remove();
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "myPeople" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="list">
+				<div class="title">${message("shop.member.myPeople.list")}</div>
+				<table class="list">
+					<tr>
+						<th>
+							${message("Member.number")}
+						</th>
+						<th>
+							${message("Member.username")}
+						</th>
+						<th>
+							${message("Member.memberRank")}
+						</th>
+						<th>
+							${message("Member.email")}
+						</th>
+						<th>
+							${message("admin.common.createDate")}
+						</th>
+						<th>
+							${message("admin.member.status")}
+						</th>
+						<th>
+							${message("admin.common.handle")}
+						</th>
+					</tr>
+					[#list page.content as member]
+						<tr[#if !member_has_next] class="last"[/#if]>
+							<td>
+								${member.number}
+							</td>
+							<td>
+								${member.username}
+							</td>
+							<td>
+								${member.memberRank.name}
+							</td>
+							<td>
+								${member.email}
+							</td>
+							<td>
+								<span title="${member.createDate?string("yyyy-MM-dd HH:mm:ss")}">${member.createDate?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</td>
+							<td>
+								[#if !member.isEnabled]
+									<span class="red">${message("admin.member.disabled")}</span>
+								[#elseif member.isLocked]
+									<span class="red"> ${message("admin.member.locked")} </span>
+								[#else]
+									<span class="green">${message("admin.member.normal")}</span>
+								[/#if]
+							</td>
+							<td>
+								[#if member.memberRank.isDefault]
+									<a href="javascript:;" class="delete" val="${member.id}">删除</a>
+									<a href="${base}/member/active.jhtml?id=${member.id}" class="active"> 激活</a>
+								[/#if]
+							</td>
+						</tr>
+					[/#list]
+				</table>
+				[#if !page.content?has_content]
+					<p>${message("shop.member.noResult")}</p>
+				[/#if]
+			</div>
+			[@pagination pageNumber = page.pageNumber totalPages = page.totalPages pattern = "?pageNumber={pageNumber}"]
+				[#include "/shop/include/pagination.html"]
+			[/@pagination]
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

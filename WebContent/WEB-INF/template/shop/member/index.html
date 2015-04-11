@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0033)http://vip.vdoms.com/Default.aspx -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/game/file/echarts-all.js"></script>
+<body>
+    [#include "/shop/include/header1.html" /]
+    [#include "/shop/include/img.html" /]
+    <div class="contenter">
+        [#include "/shop/member/include/navigation.html" /]
+        <div class="right" id="container" style="overflow-x: auto;">
+            <div class="tdTitle1" style="margin-bottom: 10px">
+                <label class="fl2" style="float:left;">
+                    推广链接：</label><input type="text" disabled="disabled"  value="${setting.siteUrl}/register.jhtml?parent=${member.number}">
+                </div>
+            <div class="info">
+                <img src="${base}/resources/game/file/info.png">
+                <div id="box" style="overflow: inherit;">
+                    <marquee scrollamount="2" scrolldelay="0" direction="left">
+                    ${setting.announce?html}
+                   </marquee>
+                </div>
+                <script type="text/javascript">
+                    //$("#box").animate({ right: "1500px" }, 4000);
+                </script>
+            </div>
+            <!--最新公告&新用户注册-->
+            <table class="detialTable2" style="margin-top: 15px;">
+                <tbody><tr>
+                    <td style="width: 412px; padding-bottom: 10px;">
+                        <div class="tdTitle">
+                            最新公告</div>
+                    </td>
+                    <td style="padding-left: 10px; padding-bottom: 10px;">
+                        <div class="tdTitle">
+                            我的消息</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 414px;">
+                    	[@article_category_root_list count = 3]
+                        <ul id=-"tasks" class="item-list">
+                            [#list articleCategories as articleCategory]
+							[@article_list articleCategoryId = articleCategory.id count = 10]
+							[#list articles as article]
+							<a href="${article.author}" title="${article.title}">
+                            <li class="item-orange clearfix" >
+                                <span class="litext">※</span> <span class="litext">
+                                    ${abbreviate(article.title, 30)}</span> <span class="litext date">[${article.createDate?string("yyyy-MM-dd HH:mm")}]</span>
+                            </li>
+                            </a>
+                            [/#list]
+						[/@article_list]
+						[/#list]
+                        </ul>
+                        [/@article_category_root_list]
+                    </td>
+                    <td style="padding-left: 10px;">
+                        <ul id="tasks" class="item-list">
+                            <marquee class="marquee" scrollamount="2" direction="up" style="height:100%;">
+                            
+                                <li class="item-orange clearfix">
+                                    <label class="inline">
+                                        <span class="litext">1、尊敬的${member.number}会员：恭喜成功注册，为了您的账户安全，请妥善保管您的密码，并且定期修改密码，为了使您能够享受更多的服务，请及时购币激活账号，您的推荐人QQ号码：${(member.parent.qq)!""}，手机号码：${(member.parent.phone)!""}</span>
+                                    </label>
+                                </li>
+                                
+                            </marquee>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody></table>
+            <div class="tdTitle" style="margin-bottom: 10px; margin-top: 10px;">
+                一周分红走势图</div>
+            <div id="tab">
+                <div class="chart">
+                    <div class="cur" id="graph3" style="height:300px;width: 830px;float: right;border: 1px solid #ebe8e8;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;height:5px;">
+        </div>
+    </div>
+    [#include "/shop/include/footer.html" /]
+    
+    <script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('graph3'));
+    option = {
+    	    title : {
+    	        text: '',
+    	    },
+    	    tooltip : {
+    	        trigger: 'axis'
+    	    },
+    	    toolbox: {
+    	        show : false,
+    	        feature : {
+    	            mark : {show: true},
+    	            dataView : {show: true, readOnly: false},
+    	            magicType : {show: true, type: ['line', 'bar']},
+    	            restore : {show: true},
+    	            saveAsImage : {show: true}
+    	        }
+    	    },
+    	    calculable : true,
+    	    xAxis : [
+    	        {
+    	            type : 'category',
+    	            boundaryGap : false,
+    	            data : [
+    	                    [#list map.keySet() as key]
+    	                    '${key}',
+    	                    [/#list]
+    	                    ]
+    	        }
+    	    ],
+    	    yAxis : [
+    	        {
+    	            type : 'value',
+    	            axisLabel : {
+    	                formatter: '{value} ${setting.currencySign}'
+    	            }
+    	        }
+    	    ],
+    	    series : [
+    	        {
+    	            name:'分红',
+    	            type:'line',
+    	            data:[
+						[#list map.keySet() as key]
+						'${map.get(key)}',
+						[/#list]      
+    	            ],
+    	            
+    	        },
+    	        
+    	    ]
+    	};
+    myChart.setOption(option);
+    </script>
+    
+
+
+6</body></html>

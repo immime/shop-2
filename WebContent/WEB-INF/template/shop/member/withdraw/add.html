@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.withdraw.add")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $inputForm = $("#inputForm");
+	var $balance = $("#balance");
+	var $bankId = $("#bankId");
+	var $bankType = $("#bankType");
+	var $bankTrueName = $("#bankTrueName");
+	var $bankAccount = $("#bankAccount");
+	var $fee = $("#fee");
+	var timeout;
+	
+	[@flash_message /]
+	
+	// 充值金额
+	$balance.bind("input propertychange change", function(event) {
+		var flag = false;
+		if (event.type != "propertychange" || event.originalEvent.propertyName == "value") {
+			$.ajax({
+				url: "check_balance.jhtml",
+				type: "POST",
+				dataType: "json",
+				async: "false",
+				cache: false,
+				success: function(data) {
+					if (data.balance<balance) {
+						alert("提现金额不能超过当前余额！");
+						$balance.val(0);
+						flag = false;
+					}else{
+						flag = true;
+					}
+				}
+			});
+		}
+	});
+	
+	// 银行
+	$bankId.change(function() {
+		var flag = false;
+		 var balance = $balance.val();
+		 if(balance==null||balance==""){
+			 alert("请先输入提现金额！");
+			 $(this).val("");
+			 return;
+		 }else{
+			 $.ajax({
+				url: "check_balance.jhtml",
+				type: "POST",
+				dataType: "json",
+				cache: false,
+				async: false,
+				success: function(data) {
+					if (data.balance<balance) {
+						alert("提现金额不能超过当前余额！");
+						flag = false;
+					}else{
+						flag = true;
+					}
+				}
+			});
+			 if(flag){
+				 calculateFee();
+			 }
+			 
+		 }
+	});
+	
+	// 计算支付手续费
+	function calculateFee() {
+		var bankId = $bankId.val();
+		$.ajax({
+			url: "calculate_fee.jhtml",
+			type: "POST",
+			data: {bankId: bankId, balance: $balance.val()},
+			dataType: "json",
+			cache: false,
+			success: function(data) {
+				if (data.message.type == "success") {
+					
+					$bankAccount.text(data.bankAccount).closest("tr").show();
+					$bankTrueName.text(data.bankTrueName).closest("tr").show();
+					$bankAccount.text(data.bankAccount).closest("tr").show();
+					$("#fee1").val(data.fee);
+					if (data.fee > 0) {
+						$fee.text(currency(data.fee, true)).closest("tr").show();
+					} else {
+						$fee.closest("tr").hide();
+					}
+				} else {
+					$.message(data.message);
+				}
+			}
+		});
+	}
+	
+	// 检查余额
+	setInterval(function() {
+		$.ajax({
+			url: "check_balance.jhtml",
+			type: "POST",
+			dataType: "json",
+			cache: false,
+			success: function(data) {
+				if (data.balance > ${member.balance}) {
+					location.href = "list.jhtml";
+				}
+			}
+		});
+	}, 10000);
+	
+	// 表单验证
+	$inputForm.validate({
+		rules: {
+			balance: {
+				required: true,
+				positive: true,
+				decimal: {
+					integer: 12,
+				},
+				remote: {
+					url: "${base}/register/check_money.jhtml",
+					cache: false
+				}
+			},
+			bankId: {
+				required: true,
+			}
+		},
+		messages: {
+			parent: {
+				balance: "提现金额有误"
+			},
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "depositRecharge" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="input deposit">
+				<div class="title">${message("shop.member.withdraw.add")}</div>
+				<form id="inputForm" action="${base}/member/withdraw/save.jhtml" method="post">
+					<input type="hidden" name="status" value="wait" />
+					<table class="input">
+						<tr>
+							<th>
+								${message("shop.member.deposit.balance")}: 
+							</th>
+							<td>
+								${currency(member.balance, true, true)}
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="requiredField">*</span>${message("Withdraw.balance")}: 
+							</th>
+							<td>
+								<input type="text" id="balance" name="balance" class="text" maxlength="16" onpaste="return false;" />
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="requiredField">*</span>${message("Withdraw.bank")}: 
+							</th>
+							<td>
+								<select name="bankId" id="bankId" class="text">
+									<option value="">--选择银行卡--</option>
+									[#list banks as bank]
+									<option value="${bank.id}">${bank.bankAccount}</option>
+									[/#list]
+								</select>
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("Withdraw.bankTrueName")}: 
+							</th>
+							<td>
+								<span id="bankTrueName"></span>
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("Withdraw.bankType")}: 
+							</th>
+							<td>
+								<span id="bankType"></span>
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("Withdraw.bankAccount")}: 
+							</th>
+							<td>
+								<span id="bankAccount"></span>
+							</td>
+						</tr>
+						
+						<tr class="hidden">
+							<th>
+								${message("Withdraw.memo")}: 
+							</th>
+							<td>
+								<textarea name="memo" class="text"></textarea>
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("shop.member.deposit.fee")}: 
+							</th>
+							<td>
+								<span id="fee"></span>
+								<input type="hidden" id="fee1" name="fee" value="0" class="text"/>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								&nbsp;
+							</th>
+							<td>
+								[#if setting.isWithraw]
+								<input type="submit" class="button" value="${message("shop.member.submit")}" />
+								<input type="button" class="button" value="${message("shop.member.back")}" onclick="location.href='list.jhtml'" />
+								[#else]
+								<span style="color: red;font-size: 16px">暂时不支持提现操作</span>
+								[/#if]
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

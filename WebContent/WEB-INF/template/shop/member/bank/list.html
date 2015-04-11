@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.bank.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	
+	[@flash_message /]
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "bank" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="list">
+				<div class="title">${message("shop.member.bank.list")}</div>
+				<div class="bar">
+					<a href="add.jhtml" class="button">${message("shop.member.bank.add")}</a>
+				</div>
+				<table class="list">
+					<tr>
+						<th>
+							${message("Bank.bankType")}
+						</th>
+						<th>
+							${message("Bank.bankAccount")}
+						</th>
+						<th>
+							${message("Bank.bankTrueName")}
+						</th>
+						<th>
+							${message("Bank.isDefault")}
+						</th>
+						<th>
+							${message("shop.common.createDate")}
+						</th>
+						<th>
+							${message("shop.member.handle")}
+						</th>
+					</tr>
+					[#list page.content as bank]
+						<tr[#if !bank_has_next] class="last"[/#if]>
+							<td>
+								${bank.bankType.fullName}
+							</td>
+							
+							<td>
+								${bank.bankAccount}
+							</td>
+							<td>
+								${bank.bankTrueName}
+							</td>
+							<td>
+								${bank.isDefault?string(message("shop.member.true"), message("shop.member.false"))}
+							</td>
+							<td>
+								<span title="${bank.createDate?string("yyyy-MM-dd HH:mm:ss")}">${bank.createDate?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</td>
+							<td>
+								<a href="edit.jhtml?id=${bank.id}">[${message("shop.member.handle.edit")}]</a>
+							</td>
+						</tr>
+					[/#list]
+				</table>
+				[#if !page.content?has_content]
+					<p>${message("shop.member.noResult")}</p>
+				[/#if]
+			</div>
+			[@pagination pageNumber = page.pageNumber totalPages = page.totalPages pattern = "?pageNumber={pageNumber}"]
+				[#include "/shop/include/pagination.html"]
+			[/@pagination]
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

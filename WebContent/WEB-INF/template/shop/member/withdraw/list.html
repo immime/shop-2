@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.withdraw.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	
+	[@flash_message /]
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "withdrawList" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="list">
+				<div class="title">${message("shop.member.withdraw.list")}</div>
+				
+				<table class="list">
+					<tr>
+						<th>
+							${message("shop.common.createDate")}
+						</th>
+						<th>
+							${message("Withdraw.number")}
+						</th>
+						<th>
+							${message("Withdraw.balance")}
+						</th>
+						<th>
+							${message("Withdraw.fee")}
+						</th>
+						<th>
+							${message("Withdraw.realBalance")}
+						</th>
+						<th>
+							${message("Withdraw.bank")}
+						</th>
+						<th>
+							${message("Withdraw.bankType")}
+						</th>
+						<th>
+							${message("Withdraw.memo")}
+						</th>
+						<th>
+							${message("Withdraw.status")}
+						</th>
+						<th>
+							${message("Withdraw.operator")}
+						</th>
+					</tr>
+					[#list page.content as withdraw]
+						<tr[#if !withdraw_has_next] class="last"[/#if]>
+							<td>
+								<span title="${withdraw.createDate?string("yyyy-MM-dd HH:mm:ss")}">${withdraw.createDate?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</td>
+							<td>
+								${withdraw.number}
+							</td>
+							<td>
+								${currency(withdraw.balance,true)}
+							</td>
+							<td>
+								${currency(withdraw.fee,true)}
+							</td>
+							<td>
+								${currency(withdraw.realBalance,true)}
+							</td>
+							<td>
+								${(withdraw.bank.bankType.fullName)!"-"}
+							</td>
+							<td>
+								${(withdraw.bank.bankAccount)!"-"}
+							</td>
+							<td>
+								<span title="${withdraw.memo}">${abbreviate(withdraw.memo,15)}</span>
+							</td>
+							<td>
+								${message("Withdraw." + withdraw.status)}
+							</td>
+							<td>
+								${(withdraw.operator.username)!"-"}
+							</td>
+						</tr>
+					[/#list]
+				</table>
+				[#if !page.content?has_content]
+					<p>${message("shop.member.noResult")}</p>
+				[/#if]
+			</div>
+			[@pagination pageNumber = page.pageNumber totalPages = page.totalPages pattern = "?pageNumber={pageNumber}"]
+				[#include "/shop/include/pagination.html"]
+			[/@pagination]
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

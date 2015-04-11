@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("admin.withdraw.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/list.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $ok = $("#listForm a[name='ok']");
+	var $reject = $("#listForm a[name='reject']");
+	
+	[@flash_message /]
+
+	// 同意
+	$ok.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "确认操作？",
+			onOk: function() {
+				$.ajax({
+					url: "ok.jhtml",
+					type: "POST",
+					data: {id: $this.attr("val")},
+					dataType: "json",
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							setTimeout(function() {
+								location.reload(true);
+							}, 3000);
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+	
+	// 同意
+	$reject.click(function() {
+		var $this = $(this);
+		$.dialog({
+			type: "warn",
+			content: "确认操作？",
+			onOk: function() {
+				$.ajax({
+					url: "reject.jhtml",
+					type: "POST",
+					data: {id: $this.attr("val")},
+					dataType: "json",
+					cache: false,
+					success: function(message) {
+						$.message(message);
+						if (message.type == "success") {
+							setTimeout(function() {
+								location.reload(true);
+							}, 3000);
+						}
+					}
+				});
+			}
+		});
+		return false;
+	});
+
+});
+</script>
+</head>
+<body>
+	<div class="path">
+		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.withdraw.list")} <span>(${message("admin.page.total", page.total)})</span>
+	</div>
+	<form id="listForm" action="list.jhtml" method="get">
+		<div class="bar">
+			
+			<div class="buttonWrap">
+				<a href="javascript:;" id="deleteButton" class="iconButton disabled">
+					<span class="deleteIcon">&nbsp;</span>${message("admin.common.delete")}
+				</a>
+				<a href="javascript:;" id="refreshButton" class="iconButton">
+					<span class="refreshIcon">&nbsp;</span>${message("admin.common.refresh")}
+				</a>
+				<div class="menuWrap">
+					<a href="javascript:;" id="pageSizeSelect" class="button">
+						${message("admin.page.pageSize")}<span class="arrow">&nbsp;</span>
+					</a>
+					<div class="popupMenu">
+						<ul id="pageSizeOption">
+							<li>
+								<a href="javascript:;"[#if page.pageSize == 10] class="current"[/#if] val="10">10</a>
+							</li>
+							<li>
+								<a href="javascript:;"[#if page.pageSize == 20] class="current"[/#if] val="20">20</a>
+							</li>
+							<li>
+								<a href="javascript:;"[#if page.pageSize == 50] class="current"[/#if] val="50">50</a>
+							</li>
+							<li>
+								<a href="javascript:;"[#if page.pageSize == 100] class="current"[/#if] val="100">100</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="menuWrap">
+				<div class="search">
+					<span id="searchPropertySelect" class="arrow">&nbsp;</span>
+					<input type="text" id="searchValue" name="searchValue" value="${page.searchValue}" maxlength="200" />
+					<button type="submit">&nbsp;</button>
+				</div>
+				<div class="popupMenu">
+					<ul id="searchPropertyOption">
+						<li>
+							<a href="javascript:;"[#if page.searchProperty == "member.number"] class="current"[/#if] val="member.number">${message("Withdraw.withdrawTrueName")}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<table id="listTable" class="list">
+			<tr>
+				<th class="check">
+					<input type="checkbox" id="selectAll" />
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="createDate">${message("admin.common.createDate")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="member">${message("Withdraw.member")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="member">${message("Withdraw.balance")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="fee">${message("Withdraw.fee")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="realBalance">${message("Withdraw.realBalance")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="bankType">${message("Withdraw.bankType")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="bankAccount">${message("Withdraw.bankAccount")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="bankAccount">${message("Bank.areaId")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="bankAccount">${message("Bank.address")}</a>
+				</th>
+				<th>
+					<a href="javascript:;" class="sort" name="operato">${message("Withdraw.operator")}</a>
+				</th>
+				<th>
+					${message("Withdraw.status")}
+				</th>
+				<th>
+					<span>${message("admin.common.handle")}</span>
+				</th>
+			</tr>
+			[#list page.content as withdraw]
+				<tr>
+					<td>
+						<input type="checkbox" name="ids" value="${withdraw.id}" />
+					</td>
+					<td>
+						${withdraw.createDate?string("yyyy-MM-dd HH:mm:ss")}
+					</td>
+					<td>
+						${withdraw.member.number}
+					</td>
+					<td>
+						${currency(withdraw.balance,true)}
+					</td>
+					<td>
+						${currency(withdraw.fee,true)}
+					</td>
+					<td>
+						${currency(withdraw.realBalance,true)}
+					</td>
+					<td>
+						${withdraw.bank.bankType.fullName}
+					</td>
+					<td>
+						${withdraw.bank.bankAccount}
+					</td>
+					<td>
+						${withdraw.bank.area}
+					</td>
+					<td>
+						${withdraw.bank.address}
+					</td>
+					<td>
+						${(withdraw.operator.username)!"-"}
+					</td>
+					<td>
+						${message("Withdraw." + withdraw.status)}
+					</td>
+					<td>
+						[#if withdraw.status=="wait"]
+						<a href="javascript:;" class="delete" name="ok" val="${withdraw.id}">[同意]</a>
+						<a href="javascript:;" class="delete" name="reject" val="${withdraw.id}">[拒绝]</a>
+						[/#if]
+					</td>
+				</tr>
+			[/#list]
+		</table>
+		[@pagination pageNumber = page.pageNumber totalPages = page.totalPages]
+			[#include "/admin/include/pagination.html"]
+		[/@pagination]
+	</form>
+</body>
+</html>

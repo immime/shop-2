@@ -1,0 +1,267 @@
+body,td,th {
+	font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 28px;
+}
+
+body {
+	background-color: #F4F4F4;
+	margin: 0px;
+	width: 100%;
+	background-image: url("../imgs/bg3.jpg") ;
+}
+
+a,area {
+	blr: expression(this.onFocus = this.blur ())
+} /* for IE */
+:focus {
+	-moz-outline-style: none;
+} /* for Firefox */
+a,area {
+	outline: none;
+}
+
+a:link {
+	color: #000000;
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #000000;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #2BB7AA;
+}
+
+a:active {
+	text-decoration: none;
+	color: #2BB7AA;
+}
+
+.loginmain {
+	width: 985px;
+	margin: 0 auto;
+	overflow: hidden;
+	padding-top: 20px;
+	margin-top:40px;
+}
+
+.logo {
+	float: left;
+	background-image: url(../imgs/logo1.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 100px;
+}
+
+.sign {
+	float: right;
+	/* width: 903px; */
+	border: 1px solid #C0C0C0;
+	padding: 40px;
+	overflow: hidden;
+	background-color: #FFFFFF;
+	z-index: 3;
+	color:white;
+	margin-top: 50px;
+}
+
+.signimg {
+	float: left;
+	width: 477px;
+	height: 350px;
+	padding-right: 50px;
+}
+
+.signbox {
+	float: left;
+	width: 375px;
+}
+
+.signtit {
+	float: left;
+	width: 350px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #BCBCBC;
+	font-family: "微软雅黑";
+	font-size: 22px;
+	color: #757575;
+	padding-left: 25px;
+	line-height: 35px;
+	height: 35px;
+	letter-spacing: 5px;
+}
+
+.signcont {
+	float: left;
+	width: 287px;
+	padding-left: 25px;
+}
+
+.account {
+	float: left;
+	width: 387px;
+	height: 42px;
+	padding-bottom: 15px;
+	background-image: url(../imgs/Login_10.jpg);
+	background-repeat: no-repeat;
+}
+
+.account input {
+	height: 10px;
+	padding-top: 13px;
+	padding-bottom: 13px;
+	width: 185px;
+	border: 1px none #FFFFFF;
+	color: #666666;
+	font-size: 16px;
+	margin-left: 50px;
+	padding-left: 10px;
+	margin-top: 1px;
+	background-color: #f1f1f1;
+}
+
+.password {
+	float: left;
+	width: 387px;
+	height: 42px;
+	padding-bottom: 15px;
+	background-image: url(../imgs/Login_13.jpg);
+	background-repeat: no-repeat;
+}
+
+.password input {
+	height: 15px;
+	padding-top: 13px;
+	padding-bottom: 13px;
+	width: 185px;
+	border: 1px none #FFFFFF;
+	color: #666666;
+	font-size: 16px;
+	margin-left: 50px;
+	padding-left: 10px;
+	margin-top: 1px;
+	background-color: #f1f1f1;
+}
+
+.captcha {
+	float: left;
+	width: 307px;
+	height: 42px;
+	padding-bottom: 15px;
+	background-image: url(../imgs/Login_15.jpg);
+	background-repeat: no-repeat;
+}
+
+.captcha input {
+	height: 10px;
+	width: 95px;
+	border: 1px none #FFFFFF;
+	color: #666666;
+	font-size: 16px;
+	margin-left: 65px;
+	padding-left: 10px;
+	background-color: #f1f1f1;
+	padding-top: 14px;
+	padding-bottom: 14px;
+	display: block;
+}
+
+.captcha span {
+	float: right;
+	width: 108px;
+	height: 42px;
+	margin-top: -40px
+}
+
+.zddl {
+	float: left;
+	width: 287px;
+	padding-bottom: 15px;
+}
+
+.zddlleft {
+	float: left;
+	width: 150px;
+	font-size: 12px;
+	color: #727272;
+	font-family: "微软雅黑";
+}
+
+.zddlleft input {
+	vertical-align: middle;
+}
+
+.zddlright {
+	float: right;
+	width: 135px;
+	font-size: 12px;
+	text-align: right;
+}
+
+.zddlright a {
+	color: #DF533C !important;
+}
+
+.signsub {
+	float: left;
+	width: 287px;
+}
+
+.signsubleft {
+	float: left;
+	width: 150px;
+	height: 40px;
+	padding-top: 5px;
+}
+
+.signsubright {
+	float: right;
+	width: 135px;
+	height: 40px;
+	text-align: right;
+	font-size: 12px;
+	color: #888888;
+	line-height: 15px;
+}
+
+.foot {
+	width: 100%;
+	height: 70px;
+	position: fixed;
+	bottom: 0px;
+}
+
+.menu {
+	width: 985px;
+	margin: 0 auto;
+	height: 35px;
+	text-align: center;
+	clear: both;
+	font-family: "微软雅黑";
+}
+
+.menu a {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.bottom {
+	width: 100%;
+	height: 35px;
+	color: #535353;
+	background-color: #E0E0E0;
+	text-align: center;
+	line-height: 40px;
+	clear: both;
+	font-size: 12px;
+	font-family: "微软雅黑";
+}
+label.fieldError{
+	color:red;
+	margin-left: 60px;
+}

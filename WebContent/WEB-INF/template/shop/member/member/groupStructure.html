@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.groupStructure")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet"
+	type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript"
+	src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+
+<link href="${base}/resources/shop/css/groupStructure.css"
+	type="text/css" rel="stylesheet" />
+<script src="${base}/resources/shop/js/jquery-1.8.3.min.js"
+	type="text/javascript"></script>
+<script src="${base}/resources/shop/js/jquery.ui.draggable.min.js"
+	type="text/javascript"></script>
+<script src="${base}/resources/shop/js/groupStructure.js"
+	type="text/javascript"></script>
+
+<script type="text/javascript">
+$().ready(function() {
+	
+	[@flash_message /]
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "groupStructure" /] [#include
+	"/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="input" style="height:800px;">
+				<div class="title">${message("shop.member.groupStructure")}</div>
+				<div class="strt-wrap" id="strtWrap" style="width: 100%;">
+					<div class="strt-block" style="width: 218%;">
+						<div class="strt-part">
+							<span class="strt-name">
+								<table cellspacing="0" cellpadding="0" border="0"
+									class="tablefilter">
+									<tbody>
+										<tr align="center" bgcolor="#FF69B4">
+											<td colspan="2" class="tdfilter">
+												[#if member1==null]
+												<a href="${base}/member/register.jhtml">${member1.number}</a>
+												[#else]
+												<a href="${base}/member/groupStructure.jhtml?id=${member1.id}">${member1.number}</a>
+												[/#if]
+											</td>
+										</tr>
+										<tr align="center">
+											<td colspan="2" class="tdfilter">
+												<table>
+													<tbody>
+														<tr class="memberRank">
+															<td colspan="3">${(member1.memberRank.name)!""}</td>
+														</tr>
+														<tr>
+															<td class="l">${(member1.leftMember)!"0"}</td>
+															<td class="m">人</td>
+															<td class="r">${(member1.rightMember)!"0"}</td>
+														</tr>
+														<tr>
+															<td class="l">${(member1.leftResults)!"0"}</td>
+															<td class="m">总</td>
+															<td class="r">${(member1.rightResults)!"0"}</td>
+														</tr>
+														<tr>
+															<td class="l">${(member1.leftRemainResults)!"0"}</td>
+															<td class="m">余</td>
+															<td class="r">${(member1.rightRemainResults)!"0"}</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</span>
+							<div class="line-v">
+								<span></span>
+							</div>
+
+							<div class="strt-block">
+								<div class="strt-part">
+									<span class="line-h line-h-r"></span>
+									<div class="line-v">
+										<span></span>
+									</div>
+									<span class="strt-name">
+										<table cellspacing="0" cellpadding="0" border="0"
+											class="tablefilter">
+											<tbody>
+												<tr align="center" bgcolor="#FF69B4">
+													<td colspan="2" class="tdfilter">
+														[#if member1!=null&&member1.leftChildren!=null]
+														<a href="${base}/member/groupStructure.jhtml?id=${(member1.leftChildren.id)!''}">${(member1.leftChildren.number)!"空位"}</a>
+														[#else]
+														<a href="${base}/member/register.jhtml?topNumber=${(member1.number)!''}">${(member1.leftChildren.number)!"空位"}</a>
+														[/#if]
+													</td>
+												</tr>
+												<tr align="center">
+													<td colspan="2" class="tdfilter">
+														<table>
+															<tbody>
+																<tr class="memberRank">
+																	<td colspan="3">${(member1.leftChildren.memberRank.name)!""}</td>
+																</tr>
+																<tr>
+																	<td class="l">${(member1.leftChildren.leftMember)!"0"}</td>
+																	<td class="m">人</td>
+																	<td class="r">${(member1.leftChildren.rightMember)!"0"}</td>
+																</tr>
+																<tr>
+																	<td class="l">${(member1.leftChildren.leftResults)!"0"}</td>
+																	<td class="m">总</td>
+																	<td class="r">${(member1.leftChildren.rightResults)!"0"}</td>
+																</tr>
+																<tr>
+																	<td class="l">${(member1.leftChildren.leftRemainResults)!"0"}</td>
+																	<td class="m">余</td>
+																	<td class="r">${(member1.leftChildren.rightRemainResults)!"0"}</td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</span>
+									<div class="line-v">
+										<span></span>
+									</div>
+									<div class="strt-block">
+										<div class="strt-part">
+											<span class="line-h line-h-r"></span>
+											<div class="line-v">
+												<span></span>
+											</div>
+											<span class="strt-name">
+												<table cellspacing="0" cellpadding="0" border="0"
+													class="tablefilter">
+													<tbody>
+														<tr align="center" bgcolor="#FF69B4">
+															<td colspan="2" class="tdfilter">
+																[#if member1!=null&&member1.leftChildren!=null&&member1.leftChildren.leftChildren!=null]
+																<a href="${base}/member/groupStructure.jhtml?id=${member1.leftChildren.leftChildren.id}">${(member1.leftChildren.leftChildren.number)!"空位"}</a>
+																[#else]
+																<a href="${base}/member/register.jhtml?topNumber=${(member1.leftChildren.number)!''}">${(member1.leftChildren.leftChildren.number)!"空位"}</a>
+																[/#if]
+															</td>
+														</tr>
+														<tr align="center">
+															<td colspan="2" class="tdfilter">
+																<table>
+																	<tbody>
+																		<tr class="memberRank">
+																			<td colspan="3">${(member1.leftChildren.leftChildren.memberRank.name)!""}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.leftChildren.leftMember)!"0"}</td>
+																			<td class="m">人</td>
+																			<td class="r">${(member1.leftChildren.leftChildren.rightMember)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.leftChildren.leftResults)!"0"}</td>
+																			<td class="m">总</td>
+																			<td class="r">${(member1.leftChildren.leftChildren.rightResults)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.leftChildren.leftRemainResults)!"0"}</td>
+																			<td class="m">余</td>
+																			<td class="r">${(member1.leftChildren.leftChildren.rightRemainResults)!"0"}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</span>
+										</div>
+										<div class="strt-part">
+											<span class="line-h line-h-l"></span>
+											<div class="line-v">
+												<span></span>
+											</div>
+											<span class="strt-name">
+												<table cellspacing="0" cellpadding="0" border="0"
+													class="tablefilter">
+													<tbody>
+														<tr align="center" bgcolor="#FF69B4">
+															<td colspan="2" class="tdfilter">
+																[#if member1!=null&&member1.leftChildren!=null&&member1.leftChildren.rightChildren!=null]
+																<a href="${base}/member/groupStructure.jhtml?id=${member1.leftChildren.rightChildren.id}">${(member1.leftChildren.rightChildren.number)!"空位"}</a>
+																[#else]
+																<a href="${base}/member/register.jhtml?topNumber=${(member1.leftChildren.number)!''}">${(member1.leftChildren.rightChildren.number)!"空位"}</a>
+																[/#if]	
+															</td>
+														</tr>
+														<tr align="center">
+															<td colspan="2" class="tdfilter">
+																<table>
+																	<tbody>
+																		<tr class="memberRank">
+																			<td colspan="3">${(member1.leftChildren.rightChildren.memberRank.name)!""}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.rightChildren.leftMember)!"0"}</td>
+																			<td class="m">人</td>
+																			<td class="r">${(member1.leftChildren.rightChildren.rightMember)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.rightChildren.leftResults)!"0"}</td>
+																			<td class="m">总</td>
+																			<td class="r">${(member1.leftChildren.rightChildren.rightResults)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.leftChildren.rightChildren.leftRemainResults)!"0"}</td>
+																			<td class="m">余</td>
+																			<td class="r">${(member1.leftChildren.rightChildren.rightRemainResults)!"0"}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</span>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="strt-part">
+									<span class="line-h line-h-l"></span>
+									<div class="line-v">
+										<span></span>
+									</div>
+									<span class="strt-name">
+										<table cellspacing="0" cellpadding="0" border="0"
+											class="tablefilter">
+											<tbody>
+												<tr align="center" bgcolor="#FF69B4">
+													<td colspan="2" class="tdfilter">
+														[#if member1!=null&&member1.rightChildren!=null]
+														<a href="${base}/member/groupStructure.jhtml?id=${member1.rightChildren.id}">${(member1.rightChildren.number)!"空位"}</a>
+														[#else]
+														<a href="${base}/member/register.jhtml?topNumber=${(member1.number)!''}">${(member1.rightChildren.number)!"空位"}</a>
+														[/#if]
+													</td>
+												</tr>
+												<tr align="center">
+													<td colspan="2" class="tdfilter">
+														<table>
+															<tbody>
+																<tr class="memberRank">
+																	<td colspan="3">${(member1.rightChildren.memberRank.name)!""}</td>
+																</tr>
+																<tr>
+																			<td class="l">${(member1.rightChildren.leftMember)!"0"}</td>
+																			<td class="m">人</td>
+																			<td class="r">${(member1.rightChildren.rightMember)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.leftResults)!"0"}</td>
+																			<td class="m">总</td>
+																			<td class="r">${(member1.rightChildren.rightResults)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.leftRemainResults)!"0"}</td>
+																			<td class="m">余</td>
+																			<td class="r">${(member1.rightChildren.rightRemainResults)!"0"}</td>
+																		</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</span>
+									<div class="line-v">
+										<span></span>
+									</div>
+									<div class="strt-block">
+										<div class="strt-part">
+											<span class="line-h line-h-r"></span>
+											<div class="line-v">
+												<span></span>
+											</div>
+											<span class="strt-name">
+												<table cellspacing="0" cellpadding="0" border="0"
+													class="tablefilter">
+													<tbody>
+														<tr align="center" bgcolor="#FF69B4">
+															<td colspan="2" class="tdfilter">
+																[#if member1!=null&&member1.rightChildren!=null&&member1.rightChildren.leftChildren!=null]
+																<a href="${base}/member/groupStructure.jhtml?id=${member1.rightChildren.leftChildren.id}">${(member1.rightChildren.leftChildren.number)!"空位"}</a>
+																[#else]
+																<a href="${base}/member/register.jhtml?topNumber=${(member1.rightChildren.number)!''}">${(member1.rightChildren.leftChildren.number)!"空位"}</a>
+																[/#if]
+															</td>
+														</tr>
+														<tr align="center">
+															<td colspan="2" class="tdfilter">
+																<table>
+																	<tbody>
+																		<tr class="memberRank">
+																			<td colspan="3">${(member1.rightChildren.leftChildren.memberRank.name)!""}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.leftChildren.leftMember)!"0"}</td>
+																			<td class="m">人</td>
+																			<td class="r">${(member1.rightChildren.leftChildren.rightMember)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.leftChildren.leftResults)!"0"}</td>
+																			<td class="m">总</td>
+																			<td class="r">${(member1.rightChildren.leftChildren.rightResults)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.leftChildren.leftRemainResults)!"0"}</td>
+																			<td class="m">余</td>
+																			<td class="r">${(member1.rightChildren.leftChildren.rightRemainResults)!"0"}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</span>
+										</div>
+
+										<div class="strt-part">
+											<span class="line-h line-h-l"></span>
+											<div class="line-v">
+												<span></span>
+											</div>
+											<span class="strt-name">
+												<table cellspacing="0" cellpadding="0" border="0"
+													class="tablefilter">
+													<tbody>
+														<tr align="center" bgcolor="#FF69B4">
+															<td colspan="2" class="tdfilter">
+																[#if member1!=null&&member1.rightChildren!=null&&member1.rightChildren.rightChildren!=null]
+																<a href="${base}/member/groupStructure.jhtml?id=${member1.rightChildren.rightChildren.id}">${(member1.rightChildren.rightChildren.number)!"空位"}</a>
+																[#else]
+																<a href="${base}/member/register.jhtml?topNumber=${(member1.rightChildren.number)!''}">${(member1.rightChildren.rightChildren.number)!"空位"}</a>
+																
+																[/#if]
+															</td>
+														</tr>
+														<tr align="center">
+															<td colspan="2" class="tdfilter">
+																<table>
+																	<tbody>
+																		<tr class="memberRank">
+																			<td colspan="3">${(member1.rightChildren.rightChildren.memberRank.name)!""}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.rightChildren.leftMember)!"0"}</td>
+																			<td class="m">人</td>
+																			<td class="r">${(member1.rightChildren.rightChildren.rightMember)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.rightChildren.leftResults)!"0"}</td>
+																			<td class="m">总</td>
+																			<td class="r">${(member1.rightChildren.rightChildren.rightResults)!"0"}</td>
+																		</tr>
+																		<tr>
+																			<td class="l">${(member1.rightChildren.rightChildren.leftRemainResults)!"0"}</td>
+																			<td class="m">余</td>
+																			<td class="r">${(member1.rightChildren.rightChildren.rightRemainResults)!"0"}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0040)http://nbkberp.vicp.cc:9555/secure/login -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>${message("shop.login.title")}</title>
+<link href="${base}/resources/game/css/login.css" rel="stylesheet" type="text/css">
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/login.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jsbn.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/prng4.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/rng.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/rsa.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/base64.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $loginForm = $("#loginForm");
+	var $number = $("#number");
+	var $password = $("#password");
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var $isRememberUsername = $("#isRememberUsername");
+	var $submit = $(":submit");
+	
+	// 记住用户名
+	if (getCookie("number") != null) {
+		$isRememberUsername.prop("checked", true);
+		$number.val(getCookie("memberNumber"));
+		$password.focus();
+	} else {
+		$isRememberUsername.prop("checked", false);
+		$number.focus();
+	}
+	
+	// 更换验证码
+	$captchaImage.click(function() {
+		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+	});
+	
+	// 表单验证、记住用户名
+	$loginForm.validate({
+		rules: {
+			number: "required",
+			password: "required"
+		},
+		submitHandler: function(form) {
+			$.ajax({
+				url: "${base}/common/public_key.jhtml",
+				type: "GET",
+				dataType: "json",
+				cache: false,
+				beforeSend: function() {
+					$submit.prop("disabled", true);
+				},
+				success: function(data) {
+					var rsaKey = new RSAKey();
+					rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
+					var enPassword = hex2b64(rsaKey.encrypt($password.val()));
+					$.ajax({
+						url: $loginForm.attr("action"),
+						type: "POST",
+						data: {
+							number: $number.val(),
+							enPassword: enPassword
+							[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberLogin")]
+								,captchaId: "${captchaId}",
+								captcha: $captcha.val()
+							[/#if]
+						},
+						dataType: "json",
+						cache: false,
+						success: function(message) {
+							if ($isRememberUsername.prop("checked")) {
+								addCookie("memberNumber", $number.val(), {expires: 7 * 24 * 60 * 60});
+							} else {
+								removeCookie("memberNumber");
+							}
+							$submit.prop("disabled", false);
+							if (message.type == "success") {
+								[#if redirectUrl??]
+									location.href = "${redirectUrl}";
+								[#else]
+									location.href = "${base}/member/index.jhtml";
+								[/#if]
+							} else if(message.type=="warn"){
+								$.message(message);
+								setTimeout(function() {
+									location.href = "${base}/member/profile/edit.jhtml"
+								}, 2000);
+							}else {
+								$.message(message);
+								[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberLogin")]
+									$captcha.val("");
+									$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+								[/#if]
+							}
+						}
+					});
+				}
+			});
+		}
+	});
+
+});
+</script>
+</head>
+
+<body>
+    <script type="text/javascript">
+if (window != top) 
+top.location.href = location.href;
+</script>
+    <form id="loginForm" action="${base}/login/submit.jhtml" method="post">
+<div class="loginmain">
+  <div class="logo">
+  	<div style="cursor:-webkit-grabbing" onclick="javascript:location=&#39;/&#39;"></div>
+  </div>
+  <br>
+  <center><font style="font-size: 50px; color: white; font-weight: bold;">乔美国际会员管理平台</font></center>
+  <br>
+  <div class="sign">
+    <div class="signbox">
+      <div class="signtit">登录</div>
+      <div class="signcont">
+                    <div style="height: 25px;line-height: 20px;color: red;font-size: 14px;padding-left:10px" id="errorinfo">
+              
+              
+              </div>
+        <div class="account">
+          <input name="number" type="text" placeholder="[#if setting.isEmailLogin]${message("shop.login.usernameOrNumber")}[#else]${message("shop.login.username")}[/#if]" id="number" type="text" maxlength="${setting.memberNumberLength}"/>
+        </div>
+        <div class="password">
+          <input class="input1" placeholder="${message("shop.login.password")}" type="password" id="password" name="password" maxlength="${setting.passwordMaxLength}" autocomplete="off"/>
+        </div>
+        
+        [#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberLogin")]
+        
+        <div class="captcha">
+          <input id="captcha" name="captcha" type="text"  class="input2" maxlength="4" autocomplete="off"/>
+          <span>
+          	<img id="captchaImage" width="100" height="38" align="absmiddle" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" style="cursor:pointer; padding-right:3px; margin-top:15px;">
+          </span> </div>
+              
+          [/#if]  
+        <div class="signsub">
+          <div class="signsubleft">
+          	<input type="image" src="${base}/resources/game/imgs/Login_anniu.jpg" name="Button1" value="登 陸" id="Button1" class="buttom1">
+                <span id="showText"></span><a href="${base}/password/find.jhtml">取回密碼</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+</form>
+</body></html>

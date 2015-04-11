@@ -1,0 +1,112 @@
+
+.strt-wrap {
+	width: 100%;
+	margin: 10px;
+	cursor: move;
+}
+
+.strt-part {
+	text-align: center;
+	float: left;
+	position: relative;
+}
+
+.strt-part span {
+	width:140px;
+	height: 140px;
+}
+
+.strt-part .line-v {
+	position: relative;
+	height: 40px;
+	width: 100%;
+}
+
+.strt-part .line-v span {
+	display: block;
+	background: #ccc;
+	position: absolute;
+	top: 0;
+	font-size: 0;
+	line-height: 1px;
+	width: 1px;
+	height: 40px;
+	left: 50%;
+}
+
+.strt-name {
+	display: inline-block;
+	height: 50px;
+	line-height: 24px;
+	border: 1px solid #ccc;
+	margin: 0 10px;
+	border-radius: 3px;
+	background: #f8f8f8;
+}
+.strt-name table{
+	width:100%;
+	height:100%;
+	border:1px;
+	text-align: center;
+}
+.tdfilter table{
+	background-color:white;
+}
+table .tdfilter{
+	font-size:18px;
+}
+.memberRank{
+	background-color: #C0C0C0;
+	margin:1px;
+	padding:1px;
+	margin:1px;
+}
+
+.l{
+	background-color: #C0C0C0;
+	margin:1px;
+	padding:1px;
+	border:solid 1px #F8F8F8;
+}
+
+.m{
+	background-color: #C0C0C0;
+	margin:1px;
+	padding:1px;
+	border:solid 1px #F8F8F8;
+}
+
+.r{
+	background-color: #C0C0C0;
+	margin:1px;
+	padding:1px;
+	border:solid 1px #F8F8F8;
+}
+
+.strt-part .line-h {
+	height: 1px;
+	display: block;
+	background: #ccc;
+	position: absolute;
+	top: 0;
+	font-size: 0;
+}
+
+.strt-part .line-h-l {
+	width: 50%;
+	left: 0;
+}
+
+.strt-part .line-h-c {
+	width: 100%;
+	left: 0;
+}
+
+.strt-part .line-h-r {
+	width: 50%;
+	right: 0;
+}
+
+.strt-block {
+	float: left;
+}

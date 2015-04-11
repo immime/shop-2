@@ -1,0 +1,786 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.children.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/list.js"></script>
+<script type="text/javascript"
+	src="${base}/resources/game/file/echarts-all.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	
+	[@flash_message /]
+
+	
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "myPeople" /] [#include "/shop/include/header.html"
+	/]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="list">
+				<div class="title">${month?string("yyyy-MM")}月资金总览</div>
+				<form id="inputForm" action="statices.jhtml" method="get">
+					<table class="list">
+						<tr>
+							<th>
+								投资
+							</th>
+							<th>
+								分红
+							</th>
+							<th>
+								提现
+							</th>
+							<th>
+								对碰
+							</th>
+							<th>
+								互助奖
+							</th>
+							<th>
+								见点
+							</th>
+							<th>
+								领导
+							</th>
+							<th>
+								销售
+							</th>
+							<th>
+								服务
+							</th>
+							<th>
+								签到
+							</th>
+							<th>
+								静态
+							</th>
+						</tr>
+						<tr>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money0,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money1,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money10,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money2,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money3,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money4,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money5,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money6,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money7,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money8,true,true)}</span>
+							</td>
+							<td><span
+								style="font-weight: bold;font-size: 10px;color: red;">${currency(money9,true,true)}</span>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph0"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph1"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph10"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph2"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph3"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph4"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph5"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph6"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph7"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph8"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="11">
+								<div class="cur" id="graph9"
+									style="height:300px;width: 100%;border: 1px solid #ebe8e8;">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+<script type="text/javascript">
+var myChart = echarts.init(document.getElementById('graph0'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月资金注入统计',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map0.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'充值金额',
+	            type:'line',
+	            data:[
+					[#list map0.keySet() as key]
+					'${map0.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph1'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月总分红',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map1.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'总分红',
+	            type:'line',
+	            data:[
+					[#list map1.keySet() as key]
+					'${map1.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph2'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月平衡奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map2.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'平衡奖',
+	            type:'line',
+	            data:[
+					[#list map2.keySet() as key]
+					'${map2.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+var myChart = echarts.init(document.getElementById('graph3'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月互助奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map3.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'互助奖',
+	            type:'line',
+	            data:[
+					[#list map3.keySet() as key]
+					'${map3.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph4'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月见点奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map4.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'见点奖',
+	            type:'line',
+	            data:[
+					[#list map4.keySet() as key]
+					'${map4.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph5'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月领导奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map5.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'领导奖',
+	            type:'line',
+	            data:[
+					[#list map5.keySet() as key]
+					'${map5.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+var myChart = echarts.init(document.getElementById('graph6'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月直推奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map6.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'直推奖',
+	            type:'line',
+	            data:[
+					[#list map6.keySet() as key]
+					'${map6.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph7'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月服务奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map7.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'服务奖',
+	            type:'line',
+	            data:[
+					[#list map7.keySet() as key]
+					'${map7.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph8'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月签到奖',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map8.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'签到奖',
+	            type:'line',
+	            data:[
+					[#list map8.keySet() as key]
+					'${map8.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph9'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月静态分红',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map9.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'静态分红',
+	            type:'line',
+	            data:[
+					[#list map9.keySet() as key]
+					'${map9.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+
+myChart = echarts.init(document.getElementById('graph10'));
+option = {
+	    title : {
+	        text: '${month?string("yyyy-MM")}月提现',
+	    },
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            data : [
+	                    [#list map10.keySet() as key]
+	                    '${key}',
+	                    [/#list]
+	                    ]
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value',
+	            axisLabel : {
+	                formatter: '{value} ${setting.currencySign}'
+	            }
+	        }
+	    ],
+	    series : [
+	        {
+	            name:'提现',
+	            type:'line',
+	            data:[
+					[#list map10.keySet() as key]
+					'${map10.get(key)}',
+					[/#list]      
+	            ],
+	            
+	        },
+	        
+	    ]
+	};
+myChart.setOption(option);
+</script>
+</html>

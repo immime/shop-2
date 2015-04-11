@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.transfer.list")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	
+	[@flash_message /]
+
+});
+</script>
+</head>
+<body>
+	[#assign current = "transferList" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="list">
+				<div class="title">${message("shop.member.transfer.list")}</div>
+				<table class="list">
+					<tr>
+						<th>
+							${message("shop.common.createDate")}
+						</th>
+						<th>
+							${message("Transfer.fromMember")}
+						</th>
+						<th>
+							${message("Transfer.oldFromBalance")}
+						</th>
+						<th>
+							${message("Transfer.newFromBalance")}
+						</th>
+						<th>
+							${message("Transfer.toMember")}
+						</th>
+						<th>
+							${message("Transfer.balance")}
+						</th>
+						<th>
+							${message("Transfer.fee")}
+						</th>
+						<th>
+							${message("Transfer.balance1")}
+						</th>
+						<th>
+							${message("Transfer.type")}
+						</th>
+					</tr>
+					[#list page.content as transfer]
+						<tr[#if !transfer_has_next] class="last"[/#if]>
+							<td>
+								<span title="${transfer.createDate?string("yyyy-MM-dd HH:mm:ss")}">${transfer.createDate?string("yyyy-MM-dd HH:mm:ss")}</span>
+							</td>
+							<td>
+								${(transfer.fromMember.number)!"-"}
+							</td>
+							<td>
+								${currency(transfer.oldFromBalance,true)}
+							</td>
+							<td>
+								${currency(transfer.newFromBalance,true)}
+							</td>
+							<td>
+								${(transfer.toMember.number)!"-"}
+							</td>
+							<td>
+								${currency(transfer.balance,true)}
+							</td>
+							<td>
+								${currency(transfer.fee,true)}
+							</td>
+							<td>
+								${currency(transfer.balance1,true)}
+							</td>
+							<td>
+								${message("Transfer." + transfer.type)}
+								(<span style="color:red;">[#if member==transfer.fromMember]转出[#elseif member==transfer.toMember]转入[/#if]</span>)
+							</td>
+						</tr>
+					[/#list]
+				</table>
+				[#if !page.content?has_content]
+					<p>${message("shop.member.noResult")}</p>
+				[/#if]
+			</div>
+			[@pagination pageNumber = page.pageNumber totalPages = page.totalPages pattern = "?pageNumber={pageNumber}"]
+				[#include "/shop/include/pagination.html"]
+			[/@pagination]
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

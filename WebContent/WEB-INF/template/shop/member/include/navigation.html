@@ -1,0 +1,110 @@
+<script type="text/javascript">
+	$().ready(function() {
+		var $qiandao = $("#qiandao");
+
+		$qiandao.click(function() {
+			$.ajax({
+				url : "${base}/member/signIn.jhtml",
+				type : "POST",
+				dataType : "json",
+				cache : false,
+				success : function(message) {
+					if (message.type = "success") {
+						$.message(message);
+					} else {
+						$.message(message);
+					}
+				}
+			});
+		});
+
+	});
+</script>
+<script language="javascript" src="${base}/resources/game/kefu/js/online.js"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/game/kefu/css/default_blue.css"/>
+<script type="text/javascript">
+$(function(){
+	$("body").Sonline({
+		Position:"right",//left或right
+		Top:200,//顶部距离，默认200px
+		Effect:false, //滚动或者固定两种方式，布尔值：true或false
+		DefaultsOpen:true, //默认展开：true,默认收缩：false
+		Qqlist:"${setting.kefuQQ}" //多个QQ用','隔开，QQ和客服名用'|'隔开
+	});
+})	
+</script>
+[@member_current]
+<div class="left">
+	<div class="listBox" id="listbox1">
+		<div class="listBoxTitle">个人信息</div>
+		<div class="listBoxContent">
+			<ul id="userinfoer">
+				<li>${message("shop.member.navigation.welcome", member.number)}
+					&nbsp;&nbsp; <a href="javascript:;" id="qiandao" class="qiandao">签到</a>
+				</li>
+				<li>会员名称：<span id="name">${member.username}</span></li>
+				<li>${message("shop.member.navigation.memberRank")}： [#if member.memberRank.isDefault] <span id="name2"
+					style="color: #000000;">${member.memberRank.name}</span> <a
+					href="${base}/member/active.jhtml"><span class="red">激活</span></a>
+					[#else] <span id="name2" style="color: green;">
+						${member.memberRank.name}</span> [/#if]
+				</li>
+				<li>${message("Member.balance")}: <span id="money">${currency(member.balance,true, true)}</span>
+				</li>
+				<li>${message("Member.balance1")}: <span id="money">${currency(member.balance1,true, true)}</span>
+				</li>
+				<li>${message("Member.balance2")}: <span id="money">${currency(member.balance2,true, true)}</span>
+				</li>
+				<li>${message("Member.balance3")}: <span id="money">${currency(member.balance3,true, true)}</span>
+				</li>
+				<li>总分红：<span id="Span2">${currency(member.allBonuds,true,true)}</span></li>
+			</ul>
+		</div>
+	</div>
+	<div class="listBox" id="listbox1">
+		<div class="listBoxTitle">快捷功能</div>
+		<div class="listBoxContent">
+			<ul class="menu">
+				<a href="${base}/member/withdraw/add.jhtml">
+					<li>
+						<div>
+							<span class="icon2 money2"></span> 我要提现
+						</div>
+				</li>
+				</a>
+				<a href="${base}/member/transfer/add.jhtml">
+					<li>
+						<div>
+							<span class="icon2 money2"></span> 内部转账
+						</div>
+				</li>
+				</a>
+				<a href="${base}/member/transfer/add1.jhtml">
+					<li>
+						<div>
+							<span class="icon2 money2"></span> 货币转换
+						</div>
+				</li>
+				</a>
+				<a href="${base}/member/profile/edit.jhtml">
+					<li>
+						<div>
+							<span class="icon2 money2"></span>
+							${message("shop.member.profile.edit")}
+						</div>
+				</li>
+				</a>
+				<a href="${base}/member/message/send.jhtml">
+					<li>
+						<div>
+							<span class="icon2 money2"></span>
+							${message("shop.member.message.send")}
+						</div>
+				</li>
+				</a>
+
+			</ul>
+		</div>
+	</div>
+</div>
+[/@member_current]

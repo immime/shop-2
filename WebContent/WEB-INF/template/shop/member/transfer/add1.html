@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.transfer.add1")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	var $balance = $("#balance");
+	var $inputForm = $("#inputForm");
+	var $fee = $("#fee");
+	var $toMemberName = $("#toMemberName");
+	var type;
+	[@flash_message /]
+	
+	$("input[name='type']").click(function(){
+		type=$(this).val();
+		$.ajax({
+			url: "check_balance.jhtml",
+			type: "POST",
+			data: {type: type,},
+			dataType: "json",
+			async: "false",
+			cache: false,
+			success: function(data) {
+				if (data.message.type == "success") {
+					$fee.text(currency(data.balance, true));
+					
+				}
+			}
+		});
+	});
+
+	$balance.blur(function(){
+		var flag=false;
+		var balance = $(this).val();
+		if(balance==null||balance==""){
+			alert("请输入转账金额");
+			$(this).val(0);
+		}else{
+			$.ajax({
+				url: "check_balance.jhtml",
+				type: "POST",
+				dataType: "json",
+				data: {type: type},
+				async: "false",
+				cache: false,
+				success: function(data) {
+					if (data.balance<balance) {
+						alert("转账金额不能超过当前余额！");
+						$balance.val(0);
+						flag = false;
+					}else{
+						flag = true;
+					}
+				}
+			});
+		}
+	});
+	
+	// 表单验证
+	$inputForm.validate({
+		rules: {
+			balance: {
+				required: true,
+				positive: true,
+				decimal: {
+					integer: 12,
+				}
+			},
+			toMemberName: {
+				required: true,
+				remote: {
+					url: "${base}/member/transfer/check_username.jhtml",
+					cache: false
+				}
+			}
+		},
+		messages: {
+			toMemberName: {
+				remote: "收账人不存在",
+			},
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+
+</script>
+</head>
+<body>
+	[#assign current = "depositRecharge" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="input deposit">
+				<div class="title">${message("shop.member.transfer.add1")}</div>
+				<form id="inputForm" action="${base}/member/transfer/save1.jhtml" method="post">
+					<input type="hidden" name="status" value="wait" />
+					<table class="input">
+						<tr>
+							<th>
+								转换类型: 
+							</th>
+							<td>
+								<span class="fieldSet">
+									[#if setting.isXjtbd]
+									<label>
+										<input type="radio" name="type" value="xjTbd" checked="checked"/>${message("Transfer.xjTbd")}
+										[#if setting.xjTbdRate>0]
+											(${setting.xjTbdRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isXjtft]
+									<label>
+										<input type="radio" name="type" value="xjTft"/>${message("Transfer.xjTft")}
+										[#if setting.xjTftRate>0]
+											(${setting.xjTftRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isXjtlc]
+									<label>
+										<input type="radio" name="type" value="xjTlc"/>${message("Transfer.xjTlc")}
+										[#if setting.xjTlcRate>0]
+											(${setting.xjTlcRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isBdtft]
+									<label>
+										<input type="radio" name="type" value="bdTft"/>${message("Transfer.bdTft")}
+										[#if setting.bdTftRate>0]
+											(${setting.bdTftRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isBdtlc]
+									<label>
+										<input type="radio" name="type" value="bdTlc"/>${message("Transfer.bdTlc")}
+										[#if setting.bdTlcRate>0]
+											(${setting.bdTlcRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isBftli]
+									<label>
+										<input type="radio" name="type" value="ftTlc"/>${message("Transfer.bfTli")}
+										[#if setting.bfTliRate>0]
+											(${setting.bfTliRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isBdtxj]
+									<label>
+										<input type="radio" name="type" value="bdTxj"/>${message("Transfer.bdTxj")}
+										[#if setting.bdTxjRate>0]
+											(${setting.bdTxjRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isFttxj]
+									<label>
+										<input type="radio" name="type" value="ftTxj"/>${message("Transfer.ftTxj")}
+										[#if setting.ftTxjRate>0]
+											(${setting.ftTxjRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isLctxj]
+									<label>
+										<input type="radio" name="type" value="lcTxj"/>${message("Transfer.lcTxj")}
+										[#if setting.lcTxjRate>0]
+											(${setting.lcTxjRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isFttbd]
+									<label>
+										<input type="radio" name="type" value="ftTbd"/>${message("Transfer.ftTbd")}
+										[#if setting.ftTbdRate>0]
+											(${setting.ftTbdRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isLctbd]
+									<label>
+										<input type="radio" name="type" value="lcTbd"/>${message("Transfer.lcTbd")}
+										[#if setting.lcTbdRate>0]
+											(${setting.lcTbdRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isLctft]
+									<label>
+										<input type="radio" name="type" value="lcTft"/>${message("Transfer.lcTft")}
+										[#if setting.lcTftRate>0]
+											(${setting.lcTftRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("shop.member.deposit.balance")}: 
+							</th>
+							<td>
+								<span id="fee">${currency(member.balance,true)}</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="requiredField">*</span>转换金额: 
+							</th>
+							<td>
+								<input type="text" id="balance" name="balance" class="text" maxlength="16" onpaste="return false;"/>
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("Transfer.memo")}: 
+							</th>
+							<td>
+								<textarea name="memo" class="text"></textarea>
+							</td>
+						</tr>
+						
+						<tr>
+							<th>
+								&nbsp;
+							</th>
+							<td>
+								<input type="submit" class="button" value="${message("shop.member.submit")}" />
+								<input type="button" class="button" value="${message("shop.member.back")}" onclick="location.href='list.jhtml'" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

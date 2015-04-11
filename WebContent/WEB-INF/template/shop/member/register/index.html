@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.register.title")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/register.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jsbn.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/prng4.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/rng.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/rsa.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/base64.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/datePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $registerForm = $("#registerForm");
+	var $parent = $("#parent");
+	var $topNumber = $("#topNumber");
+	var $number = $("#number");
+	var $username = $("#username");
+	var $password = $("#password");
+	var $zone = $("#zone");
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var $submit = $(":submit");
+	var $agreement = $("#agreement");
+	var $changeNumber = $("#changeNumber");
+	
+	// 更换验证码
+	$captchaImage.click(function() {
+		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+	});
+	
+	//更换编号
+	$changeNumber.click(function(){
+		var number = $number.val();
+		$.ajax({
+			url: "${base}/register/changeNumber.jhtml",
+			type: "POST",
+			dataType: "json",
+			cache: false,
+			success: function(message) {
+				$number.val(message.number);
+			}
+		});
+	});
+	
+	// 注册协议
+	$agreement.hover(function() {
+		$(this).height(200);
+	});
+	
+	// 表单验证
+	$registerForm.validate({
+		rules: {
+			parent: {
+				required: true,
+				pattern: /^[0-9a-z_A-Z\u4e00-\u9fa5]+$/,
+				minlength: ${setting.usernameMinLength},
+				remote: {
+					url: "${base}/register/check_parent.jhtml",
+					cache: false
+				}
+			},
+			topNumber: {
+				required: true,
+				pattern: /^[0-9a-z_A-Z\u4e00-\u9fa5]+$/,
+				minlength: ${setting.usernameMinLength},
+				remote: {
+					url: "${base}/register/check_top.jhtml",
+					cache: false
+				}
+			},
+			username: {
+				required: true,
+				pattern: /^[0-9a-z_A-Z\u4e00-\u9fa5]+$/,
+				minlength: ${setting.usernameMinLength},
+				remote: {
+					url: "${base}/register/check_username.jhtml",
+					cache: false
+				}
+			},
+			password: {
+				required: true,
+				pattern: /^[^\s&\"<>]+$/,
+				minlength: ${setting.passwordMinLength}
+			},
+			rePassword: {
+				required: true,
+				equalTo: "#password"
+			},
+			zone: {
+				required: true,
+			},
+			captcha: "required"
+			[@member_attribute_list]
+				[#list memberAttributes as memberAttribute]
+					[#if memberAttribute.isRequired]
+						,memberAttribute_${memberAttribute.id}: {
+							required: true
+						}
+					[/#if]
+				[/#list]
+			[/@member_attribute_list]
+		},
+		messages: {
+			parent: {
+				pattern: "${message("shop.register.usernameIllegal")}",
+				remote: "${message("shop.register.parentNotExist")}"
+			},
+			topNumber: {
+				pattern: "${message("shop.register.usernameIllegal")}",
+				remote: "${message("shop.register.parentNotExist")}"
+			},
+			username: {
+				pattern: "${message("shop.register.usernameIllegal")}",
+				remote: "${message("shop.register.disabledExist")}"
+			},
+			password: {
+				pattern: "${message("shop.register.passwordIllegal")}"
+			}
+			[#if !setting.isDuplicateEmail]
+				,email: {
+					remote: "${message("shop.register.emailExist")}"
+				}
+			[/#if]
+		},
+		submitHandler: function(form) {
+			
+			$.ajax({
+				url: "${base}/common/public_key.jhtml",
+				type: "GET",
+				dataType: "json",
+				cache: false,
+				beforeSend: function() {
+					$submit.prop("disabled", true);
+				},
+				success: function(data) {
+					
+					var rsaKey = new RSAKey();
+					rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
+					var enPassword = hex2b64(rsaKey.encrypt($password.val()));
+					$.ajax({
+						url: $registerForm.attr("action"),
+						type: "POST",
+						data: {
+							parent: $parent.val(),
+							username: $username.val(),
+							enPassword: enPassword,
+							number:$number.val(),
+							zone:$zone.val(),
+							topNumber:$topNumber.val()
+							[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberRegister")]
+								,captchaId: "${captchaId}",
+								captcha: $captcha.val()
+							[/#if]
+							[@member_attribute_list]
+								[#list memberAttributes as memberAttribute]
+									,memberAttribute_${memberAttribute.id}: $(":input[name='memberAttribute_${memberAttribute.id}']").val()
+								[/#list]
+							[/@member_attribute_list]
+						},
+						dataType: "json",
+						cache: false,
+						success: function(message) {
+							$.message(message);
+							if (message.type == "success") {
+								setTimeout(function() {
+									$submit.prop("disabled", false);
+									//location.reload();
+									location.href = "${base}/member/index.jhtml";
+								}, 3000);
+							} else {
+								$submit.prop("disabled", false);
+								[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberRegister")]
+									$captcha.val("");
+									$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+								[/#if]
+							}
+						}
+					});
+				}
+			});
+		}
+	});
+});
+</script>
+</head>
+<body>
+	[#assign current = "register" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container register">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="wrap">
+				<div class="main clearfix">
+					<div class="title">
+						<strong>${message("shop.register.title")}</strong>
+					</div>
+					<form id="registerForm" action="${base}/member/register/submit.jhtml" method="post">
+						<table>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>${message("shop.register.parent")}:
+								</th>
+								<td>
+									<input type="text" id="parent" name="parent" class="text" maxlength="${setting.usernameMaxLength}" value="${parent.number}" readonly="readonly"/>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>节点人:
+								</th>
+								<td>
+									<input type="text" id="topNumber" name="topNumber" class="text" maxlength="${setting.usernameMaxLength}" value="${top.number}" readonly="readonly"/>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>${message("shop.register.number")}:
+								</th>
+								<td>
+									<input type="text" id="number" name="number" class="text" maxlength="${setting.memberNumberLength}" value="${number}" readonly="readonly"/>
+									
+								</td>
+								<td align="left"><input type="button" id="changeNumber" class="submit" value="换一个" /></td>
+							</tr>
+							<tr>
+								<th>
+									区域:
+								</th>
+								<td>
+									<span class="fieldSet"> 
+										<select name="zone" id="zone" style="margin-right: 4px;">
+											<option value="">请选择...</option>
+											[#if parent.myPeople==0]
+												<option value="left">${message("Member.Zone.left")}</option>
+											[#else]
+												[#list zones as zone]
+													<option value="${zone}">${message("Member.Zone." + zone)}</option>
+												[/#list]
+											[/#if]
+										</select>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>${message("shop.register.username")}:
+								</th>
+								<td>
+									<input type="text" id="username" name="username" class="text" maxlength="${setting.usernameMaxLength}" />
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>${message("shop.register.password")}:
+								</th>
+								<td>
+									<input type="password" id="password" name="password" class="text" maxlength="${setting.passwordMaxLength}" autocomplete="off" />
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>
+									<span class="requiredField">*</span>${message("shop.register.rePassword")}:
+								</th>
+								<td>
+									<input type="password" id="rePassword" name="rePassword" class="text" maxlength="${setting.passwordMaxLength}" autocomplete="off" />
+								</td>
+								<td></td>
+							</tr>
+							
+							[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberRegister")]
+								<tr>
+									<th>
+										<span class="requiredField">*</span>${message("shop.captcha.name")}:
+									</th>
+									<td>
+										<span class="fieldSet">
+											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
+										</span>
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+							[/#if]
+							<tr>
+								<th>
+									&nbsp;
+								</th>
+								<td>
+									<input type="submit" class="submit" value="注册" />
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

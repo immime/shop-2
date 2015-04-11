@@ -1,0 +1,140 @@
+body {
+	TEXT-ALIGN: center;
+}
+
+.center {
+	MARGIN-RIGHT: auto;
+	MARGIN-LEFT: auto;
+}
+body,td,th{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #333333;
+}
+ul,li{
+	list-style-type: none;
+}
+a:link {
+	color: #000033;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #000033;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:active {
+	text-decoration: none;
+	color: #CC6600;
+}
+
+#wrap{
+	width: 50%;
+	height: 703px;
+	margin-top: 50px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	border:solid 1px #628F95;;
+}
+#wrap .title{
+	font-size:40px;
+	paddint-top:20px;
+	margin-top: 50px;
+	color:#628F95;
+}
+#topText{
+	text-align: right;
+	padding-top: 15px;
+	padding-bottom: 240px;
+}
+#topText a{
+	color: #000000;
+}
+#topText a:hover{
+	color: #FFFF00;
+}
+#loginbody{
+	padding-top:300px;
+}
+#loginbody .InputBox{
+	line-height: 50px;
+	height: 50px;
+	font-size:18px !important;
+	color:red;
+}
+#loginbody .InputBox img{vertical-align:middle;}
+#loginbody .ButtonBox{
+	line-height: 60px;
+	height: 60px;
+}
+#loginbody .sealSSL{
+	line-height: 50px;
+	height: 50px;
+	padding-left: 120px;
+	padding-top: 10px;
+}
+
+.buttom{
+	font-size: 13px;
+	text-align: center;
+	height: 40px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	color: #FFFFFF;
+	background-color: #996600;
+	font-weight: bold;
+	width: 118px;
+	background-image: url(btnLogin.gif);
+	background-repeat: no-repeat;
+}
+.buttom1{
+	font-size: 13px;
+	text-align: center;
+	height: 40px;
+	color: #FFFFFF;
+	font-weight: bold;
+	width: 118px;
+	background-image: url(btnBG.gif);
+	background-repeat: no-repeat;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	cursor:pointer;
+}
+.textGen{
+	color: #000000;
+}
+.input1{
+	height: 40px;
+	width: 240px;
+	margin: 0px;
+	padding: 0px;
+	line-height: 29px;
+	text-indent: 5px;
+	border: 1px solid #999999;
+	color: #999999;
+	border-radius:10px;
+	font-size: 18px;
+}
+.input2{
+	height: 40px;
+	width: 130px;
+	margin: 0px;
+	padding: 0px;
+	line-height: 29px;
+	text-indent: 5px;
+	border: 1px solid #999999;
+	color: #999999;
+	border-radius:10px;
+	font-size: 18px;
+}

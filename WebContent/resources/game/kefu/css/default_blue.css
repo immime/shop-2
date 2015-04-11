@@ -1,0 +1,89 @@
+/*Ĭ����ɫ*/
+.SonlineBox {
+	width: 200px;
+	font-size: 12px;
+	overflow: hidden;
+	z-index: 9999;
+	height:390px !important;
+}
+
+.SonlineBox .openTrigger {
+	width: 30px;
+	height: 110px;
+	position: absolute;
+	top: 0px;
+	z-index: 1;
+	cursor: pointer;
+	background: #0176ba url(../images/openTrigger.jpg) no-repeat;
+}
+
+.SonlineBox .titleBox {
+	width: 198px;
+	height: 35px;
+	line-height: 35px;
+	background: #038bdc url(../images/SonlineTitleBg.gif) repeat-x;
+	border-bottom: 2px solid #0176ba;
+}
+
+.SonlineBox .titleBox span {
+	margin-left: 10px;
+	color: #fff;
+	font-size: 14px;
+	font-family: '΢���ź�', '����';
+}
+
+.SonlineBox .contentBox {
+	width: 200px;
+	height: auto;
+	border: 2px solid #0176ba;
+	background: #fff;
+	position: absolute;
+	z-index: 2;
+	height:250px;
+}
+
+.SonlineBox .contentBox .closeTrigger {
+	width: 25px;
+	height: 25px;
+	display: block;
+	cursor: pointer;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	-webkit-transition: all 0.8s ease-out;
+}
+
+.SonlineBox .contentBox .closeTrigger:hover {
+	-webkit-transform: scale(1) rotate(360deg);
+}
+
+.SonlineBox .contentBox .listBox1 {
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+.SonlineBox .contentBox .listBox1 .QQList {
+	display: block;
+	width: 86%;
+	height: 22px;
+	margin: 10px auto 0px auto;
+}
+
+.SonlineBox .contentBox .listBox1 .QQList span {
+	float: left;
+	line-height: 22px;
+}
+
+.SonlineBox .contentBox .listBox1 .QQList a {
+	float: left;
+}
+
+a {
+	color: #666;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #999;
+	text-decoration: underline;
+}

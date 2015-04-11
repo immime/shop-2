@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("shop.member.transfer.add")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="${base}/resources/shop/css/member.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	var $balance = $("#balance");
+	var $inputForm = $("#inputForm");
+	var $fee = $("#fee");
+	var $checkBtn = $("#checkBtn");
+	var $toMemberName = $("#toMemberName");
+	var type;
+	[@flash_message /]
+	
+	$("input[name='type']").click(function(){
+		type=$(this).val();
+		$.ajax({
+			url: "check_balance.jhtml",
+			type: "POST",
+			data: {type: type,},
+			dataType: "json",
+			async: "false",
+			cache: false,
+			success: function(data) {
+				if (data.message.type == "success") {
+					$fee.text(currency(data.balance, true));
+					
+				}
+			}
+		});
+	});
+
+	$balance.blur(function(){
+		var flag=false;
+		var balance = $(this).val();
+		if(balance==null||balance==""){
+			alert("请输入转账金额");
+			$(this).val(0);
+		}else{
+			$.ajax({
+				url: "check_balance.jhtml",
+				type: "POST",
+				dataType: "json",
+				data: {type: type},
+				async: "false",
+				cache: false,
+				success: function(data) {
+					if (data.balance<balance) {
+						alert("提现金额不能超过当前余额！");
+						$balance.val(0);
+						flag = false;
+					}else{
+						flag = true;
+					}
+				}
+			});
+		}
+	});
+	
+	//校验收款人
+	$checkBtn.click(function(){
+		$.ajax({
+			url: "check_toMember.jhtml",
+			type: "POST",
+			dataType: "json",
+			data: {toMemberUsername: $toMemberName.val()},
+			async: "false",
+			cache: false,
+			success: function(data) {
+				if (data.member==null) {
+					alert("不存在该收款人，请重新输入！");
+					$toMemberName.val("");
+					flag = false;
+				}else{
+					alert("收款人输入正确！");
+					flag = true;
+				}
+			}
+		});
+	});
+	
+	
+	// 表单验证
+	$inputForm.validate({
+		rules: {
+			balance: {
+				required: true,
+				positive: true,
+				decimal: {
+					integer: 12,
+				}
+			},
+			toMemberName: {
+				required: true,
+				remote: {
+					url: "${base}/member/transfer/check_username.jhtml",
+					cache: false
+				}
+			}
+		},
+		messages: {
+			toMemberName: {
+				remote: "收账人不存在",
+			},
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+
+</script>
+</head>
+<body>
+	[#assign current = "depositRecharge" /]
+	[#include "/shop/include/header.html" /]
+	<div class="container member">
+		[#include "/shop/member/include/navigation.html" /]
+		<div class="span18 last">
+			<div class="input deposit">
+				<div class="title">${message("shop.member.transfer.add")}</div>
+				<form id="inputForm" action="${base}/member/transfer/save.jhtml" method="post">
+					<input type="hidden" name="status" value="wait" />
+					<table class="input">
+						<tr>
+							<th>
+								转账类型: 
+							</th>
+							<td>
+								<span class="fieldSet">
+									[#if setting.isXianjin]
+									<label>
+										<input type="radio" name="type" value="xianjin" checked="checked"/>现金币
+										[#if setting.xianjinRate>0]
+											(${setting.xianjinRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isBaodan]
+									<label>
+										<input type="radio" name="type" value="baodan"/>报单币
+										[#if setting.baodanRate>0]
+											(${setting.baodanRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isFutou]
+									<label>
+										<input type="radio" name="type" value="futou"/>种子币
+										[#if setting.futouRate>0]
+											(${setting.futouRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+									[#if setting.isLicai]
+									<label>
+										<input type="radio" name="type" value="licai"/>增值币
+										[#if setting.licaiRate>0]
+											(${setting.licaiRate*100}%)
+										[/#if]
+									</label>
+									[/#if]
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								${message("shop.member.deposit.balance")}: 
+							</th>
+							<td>
+								<span id="fee">${currency(member.balance,true)}</span>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="requiredField">*</span>${message("Transfer.balance")}: 
+							</th>
+							<td>
+								<input type="text" id="balance" name="balance" class="text" maxlength="16" onpaste="return false;"/>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<span class="requiredField">*</span>${message("Transfer.toMember")}: 
+							</th>
+							<td>
+								<input type="text" id="toMemberName" name="toMemberName" class="text" value="" maxlength="200" placeholder="请输入会员编号" />
+								<input type="button" class="button" id="checkBtn" value="校验收款人" />
+							</td>
+						</tr>
+						<tr class="hidden">
+							<th>
+								${message("Transfer.memo")}: 
+							</th>
+							<td>
+								<textarea name="memo" class="text"></textarea>
+							</td>
+						</tr>
+						
+						<tr>
+							<th>
+								&nbsp;
+							</th>
+							<td>
+								<input type="submit" class="button" value="${message("shop.member.submit")}" />
+								<input type="button" class="button" value="${message("shop.member.back")}" onclick="location.href='list.jhtml'" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	[#include "/shop/include/footer.html" /]
+</body>
+</html>

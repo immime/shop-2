@@ -1,0 +1,1268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>${message("admin.setting.edit")}</title>
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.tools.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/common.js"></script>
+<script type="text/javascript" src="${base}/resources/admin/js/input.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+	
+	var $inputForm = $("#inputForm");
+	var $browserButton = $("input.browserButton");
+	var $smtpFromMail = $("#smtpFromMail");
+	var $smtpHost = $("#smtpHost");
+	var $smtpPort = $("#smtpPort");
+	var $smtpUsername = $("#smtpUsername");
+	var $smtpPassword = $("#smtpPassword");
+	var $toMailWrap = $("#toMailWrap");
+	var $toMail = $("#toMail");
+	var $mailTest = $("#mailTest");
+	var $mailTestStatus = $("#mailTestStatus");
+	var $signInType = $("select[name='signInType']");
+	
+	[@flash_message /]
+	
+	$browserButton.browser();
+	
+	// 邮件测试
+	$mailTest.click(function() {
+		var $this = $(this);
+		if ($this.val() == "${message("admin.setting.mailTest")}") {
+			$this.val("${message("admin.setting.sendMail")}");
+			$toMailWrap.show();
+		} else {
+			function valid(element) {
+				return $inputForm.validate().element(element);
+			}
+			$.ajax({
+				url: "mail_test.jhtml",
+				type: "POST",
+				data: {smtpFromMail: $smtpFromMail.val(), smtpHost: $smtpHost.val(), smtpPort: $smtpPort.val(), smtpUsername: $smtpUsername.val(), smtpPassword: $smtpPassword.val(), toMail: $toMail.val()},
+				dataType: "json",
+				cache: false,
+				beforeSend: function() {
+					if (valid($smtpFromMail) & valid($smtpHost) & valid($smtpPort) & valid($smtpUsername) & valid($toMail)) {
+						$mailTestStatus.html('<span class="loadingIcon">&nbsp;<\/span>${message("admin.setting.sendMailLoading")}');
+						$this.prop("disabled", true);
+					} else {
+						return false;
+					}
+				},
+				success: function(message) {
+					$mailTestStatus.empty();
+					$this.prop("disabled", false);
+					$.message(message);
+				}
+			});
+		}
+	});
+	
+	$.validator.addMethod("compareLength", 
+		function(value, element, param) {
+			return this.optional(element) || $.trim(value) == "" || $.trim($(param).val()) == "" || parseFloat(value) >= parseFloat($(param).val());
+		},
+		"${message("admin.setting.compareLength")}"
+	);
+	
+	$signInType.click(function(){
+		$this = $(this);
+		
+		if($this.val()==1){
+			$("#money").show();
+			$("#rate").hide();
+			$("#random").hide();
+		}else if($this.val()==2){
+			$("#money").hide();
+			$("#rate").show();
+			$("#random").hide();
+		}else{
+			$("#money").hide();
+			$("#rate").hide();
+			$("#random").show();
+		}
+	});
+	
+	// 表单验证
+	$inputForm.validate({
+		rules: {
+			siteName: "required",
+			siteUrl: "required",
+			logo: "required",
+			email: "email",
+			siteCloseMessage: "required",
+			
+			watermarkAlpha: {
+				required: true,
+				digits: true,
+				max: 100
+			},
+			watermarkImageFile: {
+				extension: "${setting.uploadImageExtension}"
+			},
+			defaultMarketPriceScale: {
+				required: true,
+				min: 0,
+				decimal: {
+					integer: 3,
+					fraction: 3
+				}
+			},
+			usernameMinLength: {
+				required: true,
+				integer: true,
+				min: 1,
+				max: 117
+			},
+			usernameMaxLength: {
+				required: true,
+				integer: true,
+				min: 1,
+				max: 117,
+				compareLength: "#usernameMinLength"
+			},
+			passwordMinLength: {
+				required: true,
+				integer: true,
+				min: 1,
+				max: 117
+			},
+			passwordMaxLength: {
+				required: true,
+				integer: true,
+				min: 1,
+				max: 117,
+				compareLength: "#passwordMinLength"
+			},
+			registerPoint: {
+				required: true,
+				integer: true,
+				min: 0
+			},
+			registerAgreement: "required",
+			accountLockCount: {
+				required: true,
+				integer: true,
+				min: 1
+			},
+			accountLockTime: {
+				required: true,
+				digits: true
+			},
+			safeKeyExpiryTime: {
+				required: true,
+				digits: true
+			},
+			uploadMaxSize: {
+				required: true,
+				digits: true
+			},
+			imageUploadPath: "required",
+			flashUploadPath: "required",
+			mediaUploadPath: "required",
+			fileUploadPath: "required",
+			smtpFromMail: {
+				required: true,
+				email: true
+			},
+			smtpHost: "required",
+			smtpPort: {
+				required: true,
+				digits: true
+			},
+			smtpUsername: "required",
+			toMail: {
+				required: true,
+				email: true
+			},
+			currencySign: "required",
+			currencyUnit: "required",
+			defaultPointScale: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			},
+			taxRate: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			},
+			signInMoney: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			},
+			staticBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			salesBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			duiPengBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			leaderBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			huzhuBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			jianDianBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			
+			
+			todayStaticBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todaySalesBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todayDuiPengBonuds: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todayLeaderBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todayHuzhuBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todayJianDianBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			todayManagerBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			withrawMinMoney: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			}
+			boundsRate: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			aRate: {
+				required: true,
+				min: 0,
+				max:1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			bRate: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			cBonuds: {
+				required: true,
+				min: 0,
+				max: 1,
+				decimal: {
+					fraction: 3
+				}
+			},
+			bSystemLeave: {
+				required: true,
+				min: 0,
+				decimal: {
+					fraction: 3
+				}
+			},
+			defaultPassword: {
+				required: true,
+				minlength: 6,
+				maxlength: 16
+			},
+			defaultPassword1: {
+				required: true,
+				minlength: 6,
+				maxlength: 16
+			},
+			cookiePath: "required"
+		}
+	});
+	
+});
+</script>
+</head>
+<body>
+	<div class="path">
+		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.setting.edit")}
+	</div>
+	<form id="inputForm" action="update.jhtml" method="post" enctype="multipart/form-data">
+		<ul id="tab" class="tab">
+			<li>
+				<input type="button" value="${message("admin.setting.base")}" />
+			</li>
+			<li>
+				<input type="button" value="${message("admin.setting.show")}" />
+			</li>
+			<li>
+				<input type="button" value="${message("admin.setting.bonuds")}" />
+			</li>
+			<li>
+				<input type="button" value="财务" />
+			</li>
+			<li>
+				<input type="button" value="${message("admin.setting.registerSecurity")}" />
+			</li>
+			<li>
+				<input type="button" value="${message("admin.setting.mail")}" />
+			</li>
+			<li>
+				<input type="button" value="上传下载设置" />
+			</li>
+			<li>
+				<input type="button" value="防攻击设置" />
+			</li>
+			<li>
+				<input type="button" value="${message("admin.setting.other")}" />
+			</li>
+		</ul>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.siteName")}:
+				</th>
+				<td>
+					<input type="text" name="siteName" class="text" value="${setting.siteName}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.siteUrl")}:
+				</th>
+				<td>
+					<input type="text" name="siteUrl" class="text" value="${setting.siteUrl}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.logo")}:
+				</th>
+				<td>
+					<span class="fieldSet">
+						<input type="text" name="logo" class="text" value="${setting.logo}" maxlength="200" />
+						<input type="button" class="button browserButton" value="${message("admin.browser.select")}" />
+						<a href="${setting.logo}" target="_blank">${message("admin.common.view")}</a>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.kefuQQ")}:
+				</th>
+				<td>
+					<textarea name="kefuQQ" class="text" title="${message("admin.setting.kefuQQ")}">${setting.kefuQQ}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.address")}:
+				</th>
+				<td>
+					<input type="text" name="address" class="text" value="${setting.address}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.phone")}:
+				</th>
+				<td>
+					<input type="text" name="phone" class="text" value="${setting.phone}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.zipCode")}:
+				</th>
+				<td>
+					<input type="text" name="zipCode" class="text" value="${setting.zipCode}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.email")}:
+				</th>
+				<td>
+					<input type="text" name="email" class="text" value="${setting.email}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.certtext")}:
+				</th>
+				<td>
+					<input type="text" name="certtext" class="text" value="${setting.certtext}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isSiteEnabled")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isSiteEnabled" value="true"[#if setting.isSiteEnabled] checked="checked"[/#if] />
+					<input type="hidden" name="_isSiteEnabled" value="false" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.siteCloseMessage")}:
+				</th>
+				<td>
+					<textarea name="siteCloseMessage" class="text">${setting.siteCloseMessage?html}</textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.announce")}:
+				</th>
+				<td>
+					<textarea name="announce" class="text">${setting.announce?html}</textarea>
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					金额精确的位数:
+				</th>
+				<td>
+					<select name="priceScale">
+						<option value="0"[#if setting.priceScale == 0] selected="selected"[/#if]>${message("admin.setting.priceScale0")}</option>
+						<option value="1"[#if setting.priceScale == 1] selected="selected"[/#if]>${message("admin.setting.priceScale1")}</option>
+						<option value="2"[#if setting.priceScale == 2] selected="selected"[/#if]>${message("admin.setting.priceScale2")}</option>
+						<option value="3"[#if setting.priceScale == 3] selected="selected"[/#if]>${message("admin.setting.priceScale3")}</option>
+						<option value="4"[#if setting.priceScale == 4] selected="selected"[/#if]>${message("admin.setting.priceScale4")}</option>
+						<option value="5"[#if setting.priceScale == 5] selected="selected"[/#if]>${message("admin.setting.priceScale5")}</option>
+						
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					金额精确的方式:
+				</th>
+				<td>
+					<select name="priceRoundType">
+						[#list roundTypes as roundType]
+							<option value="${roundType}"[#if roundType == setting.priceRoundType] selected="selected"[/#if]>${message("Setting.RoundType." + roundType)}</option>
+						[/#list]
+					</select>
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					${message("Setting.isSignIn")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isSignIn" value="true"[#if setting.isSignIn] checked="checked"[/#if] />
+					<input type="hidden" name="_isSignIn" value="false" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.signInType")}:
+				</th>
+				<td>
+					<select name="signInType">
+						<option value="1"[#if setting.signInType == 1] selected="selected"[/#if]>${message("Setting.signInType.money")}</option>
+						<option value="2"[#if setting.signInType == 2] selected="selected"[/#if]>${message("Setting.signInType.rate")}</option>
+						<option value="3"[#if setting.signInType == 3] selected="selected"[/#if]>${message("Setting.signInType.random")}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>${message("Setting.signInMoney")}</th>
+				<td [#if setting.signInType==1] class="" [#else]class="hidden" [/#if] id="money">
+					<input type="text" name="signInMoney" class="text" value="${setting.signInMoney}" maxlength="7" title="如果选择的按金额领取，那么每天签到领取的金额就是这里设置的金额"/>
+				</td>
+				<td [#if setting.signInType==2] class="" [#else]class="hidden" [/#if] id="rate">
+					<input type="text" name="signInMoneyRate" class="text" value="${setting.signInMoneyRate}" maxlength="7" title="如果选择的是按比率领取，那么每天签到领取的金额就是投资额和这里设置的比率的乘积。如果是10%请输入0.1"/>
+				</td>
+				<td [#if setting.signInType==3] class="" [#else]class="hidden" [/#if] id="random">
+					<input type="text" name="minSignInMoney" class="text" value="${setting.minSignInMoney}" maxlength="7" title="如果选择的是随机领取，那么每天签到领取的金额不能少于这个金额"/>
+					<input type="text" name="maxSignInMoney" class="text" value="${setting.maxSignInMoney}" maxlength="7" title="如果选择的是随机领取，那么每天签到领取的金额不能多余这个金额"/>
+				</td>
+				
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.boundsRate")}:
+				</th>
+				<td>
+					<input type="text" name="boundsRate" class="text" value="${setting.boundsRate}" maxlength="7" title="每天进来资金多少比率用来参与静态分配，如果是10%请输入0.1" />
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>
+					${message("Setting.staticBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="staticBonuds" class="text" value="${setting.staticBonuds}" maxlength="7" title="如果是10%请输入0.1" />
+					<input type="text" name="todayStaticBonuds" class="text" value="${setting.todayStaticBonuds}" maxlength="7" title="用来控制每天领取静态分红的金额，为0表明没有限制" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.salesBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="salesBonuds" class="text" value="${setting.salesBonuds}" maxlength="7" title="直推一人，激活后，可以获取推荐会员投资额的多少比率作为直推奖。如果是10%请输入0.1" />
+					<input type="text" name="todaySalesBonuds" class="text" value="${setting.todaySalesBonuds}" maxlength="7" title="每天可以获取直推奖的金额。为0表明没有限制" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.duiPengBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="duiPengBonuds" class="text" value="${setting.duiPengBonuds}" maxlength="7" title="小区业绩的多少比例作为平衡奖。如果是10%请输入0.1" />
+					<input type="text" name="todayDuiPengBonuds" class="text" value="${setting.todayDuiPengBonuds}" maxlength="7" title="每天平衡奖领取的最高金额,为0表明没有限制" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.leaderBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="leaderBonuds" class="text" value="${setting.leaderBonuds}" maxlength="7" title="当下面会员拿去平衡奖奖的时候，上层会员可以获取平衡奖的多少比率作为领导奖。如果是10%请输入0.1" />
+					<input type="text" name="todayLeaderBonuds" class="text" value="${setting.todayLeaderBonuds}" maxlength="7" title="每天领取领导奖的最高金额。为0表明没有限制" />
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>
+					${message("Setting.huzhuBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="huzhuBonuds" class="text" value="${setting.huzhuBonuds}" maxlength="7" title="当推荐人拿取平衡奖时候，推荐人平衡奖的多少比率用于作为下面会员的互助奖。如果是10%请输入0.1" />
+					<input type="text" name="todayHuzhuBonuds" class="text" value="${setting.todayHuzhuBonuds}" maxlength="7" title="每天领取互助奖的金额为0表明没有限制" />
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>
+					${message("Setting.jianDianBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="jianDianBonuds" class="text" value="${setting.jianDianBonuds}" maxlength="7" title="会员激活后，会员投资额的多少比率用来作为上面会员的见点奖。如果是10%请输入0.1" />
+					<input type="text" name="todayJianDianBonuds" class="text" value="${setting.todayJianDianBonuds}" maxlength="7" title="每天获取见点奖的金额。为0表明没有限制" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.managerBonuds")}:
+				</th>
+				<td>
+					<input type="text" name="managerBonuds" class="text" value="${setting.managerBonuds}" maxlength="7" title="会员上面的会员可以获取该会员投资额的多少比例作为见点奖如果是10%请输入0.1" />
+					<input type="text" name="todayManagerBonuds" class="text" value="${setting.todayManagerBonuds}" maxlength="7" title="每天领取见点奖的最高金额。为0表明没有限制" />
+					<input type="text" name="managerBonudsLeve" class="text" value="${setting.managerBonudsLeve}" maxlength="7" title="见点奖的层数。为0 表明没有" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.aRate")}:
+				</th>
+				<td>
+					<input type="text" name="aRate" class="text" value="${setting.aRate}" maxlength="7" title="每次获取奖金后，多少比率进去现金币账户。如果是10%请输入0.1" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.bRate")}:
+				</th>
+				<td>
+					<input type="text" name="bRate" class="text" value="${setting.bRate}" maxlength="7" title="每次获取奖金后，多少比率进去复投币账户。如果是10%请输入0.1" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.cRate")}:
+				</th>
+				<td>
+					<input type="text" name="cRate" class="text" value="${setting.cRate}" maxlength="7" title="每次获取奖金后，多少比率进去理财币账户。如果是10%请输入0.1" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.bSystemLeave")}:
+				</th>
+				<td>
+					<input type="text" name="bSystemLeave" class="text" value="${setting.bSystemLeave}" maxlength="7" />
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					${message("Setting.isWithraw")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isWithraw" value="true"[#if setting.isWithraw] checked="checked"[/#if] title="选中表明开启提现"/>
+					<input type="hidden" name="_isWithraw" value="false" />
+					<input type="text" name="withrawMinMoney" class="text" value="${setting.withrawMinMoney}" maxlength="200" title="提现金额的最低值。如果是0表明不设置最低提现金额" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isXianjin")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isXianjin" value="true"[#if setting.isXianjin] checked="checked"[/#if] />
+					<input type="hidden" name="_isXianjin" value="false" />
+					<input type="text" name="xianjinRate" class="text" value="${setting.xianjinRate}" maxlength="7" title="现金币转账的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isBaodan")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isBaodan" value="true"[#if setting.isBaodan] checked="checked"[/#if] />
+					<input type="hidden" name="_isBaodan" value="false" />
+					<input type="text" name="baodanRate" class="text" value="${setting.baodanRate}" maxlength="7" title="报单币转账的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isFutou")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isFutou" value="true"[#if setting.isFutou] checked="checked"[/#if] />
+					<input type="hidden" name="_isFutou" value="false" />
+					<input type="text" name="futouRate" class="text" value="${setting.futouRate}" maxlength="7" title="复投币转账的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isLicai")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isLicai" value="true"[#if setting.isLicai] checked="checked"[/#if] />
+					<input type="hidden" name="_isLicai" value="false" />
+					<input type="text" name="licaiRate" class="text" value="${setting.licaiRate}" maxlength="7" title="理财币转账的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isXjtbd")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isXjtbd" value="true"[#if setting.isXjtbd] checked="checked"[/#if] />
+					<input type="hidden" name="_isXjtbd" value="false" />
+					<input type="text" name="xjTbdRate" class="text" value="${setting.xjTbdRate}" maxlength="7"  title="现金币转报单币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isXjtft")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isXjtft" value="true"[#if setting.isXjtft] checked="checked"[/#if] />
+					<input type="hidden" name="_isXjtft" value="false" />
+					<input type="text" name="xjTftRate" class="text" value="${setting.xjTftRate}" maxlength="7"  title="现金币转复投币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isXjtlc")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isXjtlc" value="true"[#if setting.isXjtlc] checked="checked"[/#if] />
+					<input type="hidden" name="_isXjtlc" value="false" />
+					<input type="text" name="xjTlcRate" class="text" value="${setting.xjTlcRate}" maxlength="7"  title="现金币转理财币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isBdtft")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isBdtft" value="true"[#if setting.isBdtft] checked="checked"[/#if] />
+					<input type="hidden" name="_isBdtft" value="false" />
+					<input type="text" name="bdTftRate" class="text" value="${setting.bdTftRate}" maxlength="7"  title="报单币转复投币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isBdtlc")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isBdtlc" value="true"[#if setting.isBdtlc] checked="checked"[/#if] />
+					<input type="hidden" name="_isBdtlc" value="false" />
+					<input type="text" name="bdTlcRate" class="text" value="${setting.bdTlcRate}" maxlength="7"  title="报单币转理财币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isBftli")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isBftli" value="true"[#if setting.isBftli] checked="checked"[/#if] />
+					<input type="hidden" name="_isBftli" value="false" />
+					<input type="text" name="bfTliRate" class="text" value="${setting.bfTliRate}" maxlength="7"  title="现金币转报单币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isBdtxj")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isBdtxj" value="true"[#if setting.isBdtxj] checked="checked"[/#if] />
+					<input type="hidden" name="_isBdtxj" value="false" />
+					<input type="text" name="bdTxjRate" class="text" value="${setting.bdTxjRate}" maxlength="7"  title="报单币转现金币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isFttxj")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isFttxj" value="true"[#if setting.isFttxj] checked="checked"[/#if] />
+					<input type="hidden" name="_isFttxj" value="false" />
+					<input type="text" name="ftTxjRate" class="text" value="${setting.ftTxjRate}" maxlength="7"  title="复投币转现金币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isLctxj")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isLctxj" value="true"[#if setting.isLctxj] checked="checked"[/#if] />
+					<input type="hidden" name="_isLctxj" value="false" />
+					<input type="text" name="lcTxjRate" class="text" value="${setting.lcTxjRate}" maxlength="7"  title="理财币转现金币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isFttbd")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isFttbd" value="true"[#if setting.isFttbd] checked="checked"[/#if] />
+					<input type="hidden" name="_isFttbd" value="false" />
+					<input type="text" name="ftTbdRate" class="text" value="${setting.ftTbdRate}" maxlength="7"  title="复投币转报单币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isLctbd")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isLctbd" value="true"[#if setting.isLctbd] checked="checked"[/#if] />
+					<input type="hidden" name="_isLctbd" value="false" />
+					<input type="text" name="lcTbdRate" class="text" value="${setting.lcTbdRate}" maxlength="7"  title="理财币转报单币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isLctft")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isLctft" value="true"[#if setting.isLctft] checked="checked"[/#if] />
+					<input type="hidden" name="_isLctft" value="false" />
+					<input type="text" name="lcTftRate" class="text" value="${setting.lcTftRate}" maxlength="7"  title="理财币转复投币的手续费。如果是10%，请输入0.1"/>
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					${message("Setting.isRegisterEnabled")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isRegisterEnabled" value="true"[#if setting.isRegisterEnabled] checked="checked"[/#if] />
+					<input type="hidden" name="_isRegisterEnabled" value="false" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isDuplicateEmail")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isDuplicateEmail" value="true"[#if setting.isDuplicateEmail] checked="checked"[/#if] />
+					<input type="hidden" name="_isDuplicateEmail" value="false" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.disabledUsername")}:
+				</th>
+				<td>
+					<input type="text" name="disabledUsername" class="text" value="${setting.disabledUsername}" maxlength="200" title="${message("admin.setting.disabledUsernameTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.usernameMinLength")}:
+				</th>
+				<td>
+					<input type="text" id="usernameMinLength" name="usernameMinLength" class="text" value="${setting.usernameMinLength}" maxlength="3" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.usernameMaxLength")}:
+				</th>
+				<td>
+					<input type="text" name="usernameMaxLength" class="text" value="${setting.usernameMaxLength}" maxlength="3" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.passwordMinLength")}:
+				</th>
+				<td>
+					<input type="text" id="passwordMinLength" name="passwordMinLength" class="text" value="${setting.passwordMinLength}" maxlength="3" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.passwordMaxLength")}:
+				</th>
+				<td>
+					<input type="text" name="passwordMaxLength" class="text" value="${setting.passwordMaxLength}" maxlength="3" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.registerPoint")}:
+				</th>
+				<td>
+					<input type="text" name="registerPoint" class="text" value="${setting.registerPoint}" maxlength="9" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.memberNumberPrefix")}:
+				</th>
+				<td>
+					<input type="text" name="memberNumberPrefix" class="text" value="${setting.memberNumberPrefix}" maxlength="9" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.memberNumberLength")}:
+				</th>
+				<td>
+					<input type="text" name="memberNumberLength" class="text" value="${setting.memberNumberLength}" maxlength="9" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.registerAgreement")}:
+				</th>
+				<td>
+					<textarea name="registerAgreement" class="text">${setting.registerAgreement?html}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isEmailLogin")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isEmailLogin" value="true"[#if setting.isEmailLogin] checked="checked"[/#if] />
+					<input type="hidden" name="_isEmailLogin" value="false" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.captchaTypes")}:
+				</th>
+				<td>
+					[#list captchaTypes as captchaType]
+						<label>
+							<input type="checkbox" name="captchaTypes" value="${captchaType}"[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains(captchaType)] checked="checked"[/#if] />${message("Setting.CaptchaType." + captchaType)}
+						</label>
+					[/#list]
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.accountLockTypes")}:
+				</th>
+				<td>
+					[#list accountLockTypes as accountLockType]
+						<label>
+							<input type="checkbox" name="accountLockTypes" value="${accountLockType}"[#if setting.accountLockTypes?? && setting.accountLockTypes?seq_contains(accountLockType)] checked="checked"[/#if] />${message("Setting.AccountLockType." + accountLockType)}
+						</label>
+					[/#list]
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.accountLockCount")}:
+				</th>
+				<td>
+					<input type="text" name="accountLockCount" class="text" value="${setting.accountLockCount}" maxlength="9" title="${message("admin.setting.accountLockCountTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.accountLockTime")}:
+				</th>
+				<td>
+					<input type="text" name="accountLockTime" class="text" value="${setting.accountLockTime}" maxlength="9" title="${message("admin.setting.accountLockTimeTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.safeKeyExpiryTime")}:
+				</th>
+				<td>
+					<input type="text" name="safeKeyExpiryTime" class="text" value="${setting.safeKeyExpiryTime}" maxlength="9" title="${message("admin.setting.safeKeyExpiryTimeTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.defaultPassword")}:
+				</th>
+				<td>
+					<input type="text" name="defaultPassword" class="text" value="${setting.defaultPassword}" maxlength="200" title="重置会员密码后，会员的一级密码"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.defaultPassword1")}:
+				</th>
+				<td>
+					<input type="text" name="defaultPassword1" class="text" value="${setting.defaultPassword1}" maxlength="200" title="重置会员密码后，会员的二级密码"/>
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.smtpFromMail")}:
+				</th>
+				<td>
+					<input type="text" id="smtpFromMail" name="smtpFromMail" class="text" value="${setting.smtpFromMail}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.smtpHost")}:
+				</th>
+				<td>
+					<input type="text" id="smtpHost" name="smtpHost" class="text" value="${setting.smtpHost}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.smtpPort")}:
+				</th>
+				<td>
+					<input type="text" id="smtpPort" name="smtpPort" class="text" value="${setting.smtpPort}" maxlength="9" title="${message("admin.setting.smtpPorteTitle")}" />
+				</td>
+			</tr>
+			<tr> 
+				<th>
+					<span class="requiredField">*</span>${message("Setting.smtpUsername")}:
+				</th>
+				<td>
+					<input type="text" id="smtpUsername" name="smtpUsername" class="text" value="${setting.smtpUsername}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.smtpPassword")}:
+				</th>
+				<td>
+					<input type="password" id="smtpPassword" name="smtpPassword" class="text" maxlength="200" title="${message("admin.setting.smtpPasswordTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("admin.setting.mailTest")}:
+				</th>
+				<td>
+					<span class="fieldSet">
+						<span id="toMailWrap" >
+							${message("admin.setting.toMail")}: <br />
+							<input type="text" id="toMail" name="toMail" class="text ignore" maxlength="200" />
+						</span>
+						<input type="button" id="mailTest" class="button" value="${message("admin.setting.mailTest")}" />
+						<span id="mailTestStatus">&nbsp;</span>
+					</span>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="input tabContent">
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.uploadMaxSize")}:
+				</th>
+				<td>
+					<input type="text" name="uploadMaxSize" class="text" value="${setting.uploadMaxSize}" maxlength="9" title="${message("admin.setting.uploadMaxSizeTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.uploadImageExtension")}:
+				</th>
+				<td>
+					<input type="text" name="uploadImageExtension" class="text" value="${setting.uploadImageExtension}" maxlength="200" title="${message("admin.setting.uploadImageExtensionTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.uploadFlashExtension")}:
+				</th>
+				<td>
+					<input type="text" name="uploadFlashExtension" class="text" value="${setting.uploadFlashExtension}" maxlength="200" title="${message("admin.setting.uploadFlashExtensionTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.uploadMediaExtension")}:
+				</th>
+				<td>
+					<input type="text" name="uploadMediaExtension" class="text" value="${setting.uploadMediaExtension}" maxlength="200" title="${message("admin.setting.uploadMediaExtensionTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.uploadFileExtension")}:
+				</th>
+				<td>
+					<input type="text" name="uploadFileExtension" class="text" value="${setting.uploadFileExtension}" maxlength="200" title="${message("admin.setting.uploadFileExtensionTitle")}" />
+				</td>
+			</tr>
+			<tr >
+				<th>
+					<span class="requiredField">*</span>${message("Setting.imageUploadPath")}:
+				</th>
+				<td>
+					<input type="text" name="imageUploadPath" class="text" value="${setting.imageUploadPath}" maxlength="200" />
+				</td>
+			</tr>
+			<tr >
+				<th>
+					<span class="requiredField">*</span>${message("Setting.flashUploadPath")}:
+				</th>
+				<td>
+					<input type="text" name="flashUploadPath" class="text" value="${setting.flashUploadPath}" maxlength="200" />
+				</td>
+			</tr>
+			<tr >
+				<th>
+					<span class="requiredField">*</span>${message("Setting.mediaUploadPath")}:
+				</th>
+				<td>
+					<input type="text" name="mediaUploadPath" class="text" value="${setting.mediaUploadPath}" maxlength="200" />
+				</td>
+			</tr>
+			<tr >
+				<th>
+					<span class="requiredField">*</span>${message("Setting.fileUploadPath")}:
+				</th>
+				<td>
+					<input type="text" name="fileUploadPath" class="text" value="${setting.fileUploadPath}" maxlength="200" />
+				</td>
+			</tr>
+		</table>
+		
+		<table class="input tabContent">
+			<tr>
+				<th>
+					${message("Setting.isOpenReferer")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isOpenReferer" value="true"[#if setting.isOpenReferer] checked="checked"[/#if] />
+					<input type="hidden" name="_isOpenReferer" value="false" />
+					<input type="text" name="referer" class="text" value="${setting.referer}"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.ignoreUrl")}:
+				</th>
+				<td>
+					<textarea name="ignoreUrl" class="text" title="只有开启了请求头的检测，这里的设置才有用">${setting.ignoreUrl}</textarea>
+				</td>
+			</tr>
+		</table>
+		<table class="input tabContent">
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.currencySign")}: 
+				</th>
+				<td>
+					<input type="text" name="currencySign" class="text" value="${setting.currencySign}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.currencyUnit")}: 
+				</th>
+				<td>
+					<input type="text" name="currencyUnit" class="text" value="${setting.currencyUnit}" maxlength="200" />
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.defaultPointScale")}: 
+				</th>
+				<td>
+					<input type="text" name="defaultPointScale" class="text" value="${setting.defaultPointScale}" maxlength="7" title="${message("admin.setting.defaultPointScaleTitle")}" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.isDevelopmentEnabled")}:
+				</th>
+				<td>
+					<label title="${message("admin.setting.isDevelopmentEnabledTitle")}">
+						<input type="checkbox" name="isDevelopmentEnabled" value="true"[#if setting.isDevelopmentEnabled] checked="checked"[/#if] />
+						<input type="hidden" name="_isDevelopmentEnabled" value="false" />
+					</label>
+				</td>
+			</tr>
+			
+			<tr class="hidden">
+				<th>
+					${message("Setting.isInvoiceEnabled")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isInvoiceEnabled" value="true"[#if setting.isInvoiceEnabled] checked="checked"[/#if] />
+					<input type="hidden" name="_isInvoiceEnabled" value="false" />
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>
+					${message("Setting.isTaxPriceEnabled")}:
+				</th>
+				<td>
+					<input type="checkbox" name="isTaxPriceEnabled" value="true" title="${message("admin.setting.taxRateTitle")}"[#if setting.isTaxPriceEnabled] checked="checked"[/#if] />
+					<input type="hidden" name="_isTaxPriceEnabled" value="false" />
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>
+					<span class="requiredField">*</span>${message("Setting.taxRate")}:
+				</th>
+				<td>
+					<input type="text" name="taxRate" class="text" value="${setting.taxRate}" maxlength="7" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("Setting.cookiePath")}: 
+				</th>
+				<td>
+					<input type="text" name="cookiePath" class="text" value="${setting.cookiePath}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					${message("Setting.cookieDomain")}: 
+				</th>
+				<td>
+					<input type="text" name="cookieDomain" class="text" value="${setting.cookieDomain}" maxlength="200" />
+				</td>
+			</tr>
+		</table>
+		<table class="input">
+			<tr>
+				<th>
+					&nbsp;
+				</th>
+				<td>
+					<input type="submit" class="button" value="${message("admin.common.submit")}" />
+					<input type="button" class="button" value="${message("admin.common.back")}" onclick="location.href='../common/index.jhtml'" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
